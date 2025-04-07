@@ -1,0 +1,607 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Spinnaker", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  min-height: 100%;
+  width: 100%;
+}
+
+/* Host and User Sidebar CSS L-22*/
+/* ViewMyProperty CSS L-95*/
+/* User Home Wishlist Hover Effect L-173 */
+/* MessageComponent CSS L-200 */
+/* Admin Page CSS L-260 */
+/* Home Details CSS L-528 */
+
+@media (min-width: 992px) {
+  .sidebar-expand-lg.layout-fixed .app-sidebar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    bottom: 0;
+    max-height: 100% !important;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+}
+
+.app-sidebar {
+  width: 260px;
+  background: linear-gradient(135deg, #1e1b2d, #252540);
+  color: white;
+  position: fixed;
+  max-height: 100%;
+  transition: width 0.3s ease-in-out;
+  padding: 15px;
+  overflow: hidden;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.app-sidebar.closed {
+  width: 80px;
+}
+
+.sidebar-menu .nav-link {
+  display: flex;
+  align-items: center;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  transition: 0.3s;
+  text-decoration: none;
+}
+
+.sidebar-menu .nav-link:hover {
+  background: rgb(255, 228, 196, 0.4);
+  color: wheat;
+}
+
+.nav-icon {
+  font-size: 22px;
+}
+
+.nav-text {
+  margin-left: 14px;
+  font-size: 16px;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.app-sidebar.closed .nav-text {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.logout .nav-link {
+  color: red;
+}
+
+.sidebar-brand {
+  padding: 20px;
+  font-size: 1.4rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.brand-text {
+  color: white;
+}
+
+/* ViewMyProperty CSS */
+/* Container Styling */
+.property-container {
+
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 10px;
+}
+
+/* Header Styling */
+.property-header {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Table Styling */
+.property-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.property-table th {
+  background-color: #343a40 !important;
+  color: white !important;
+  padding: 12px;
+  text-align: center;
+}
+
+.property-table td {
+  padding: 10px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Alternate Row Colors */
+.property-table tbody tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+/* Hover Effects */
+.property-table tbody tr:hover {
+  background-color: #e9ecef;
+  transition: 0.3s;
+}
+
+/* Image Styling */
+.property-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.property-image:hover {
+  transform: scale();
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  .property-table td,
+  .property-table th {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
+
+/* User Home Wishlist Hover Effect L-172 */
+.image-container {
+  position: relative;
+  display: inline-block;
+}
+
+.wishlist-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 1.8rem;
+  color: white;
+  cursor: pointer;
+  transition: color 0.3s ease, opacity 0.3s ease;
+  opacity: 0.7;
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.image-container:hover .wishlist-icon {
+  opacity: 1;
+}
+
+.wishlist-active {
+  color: red !important;
+  opacity: 1;
+}
+
+/* MessageComponent CSS L-200 */
+.message-container {
+  width: 400px;
+  margin: auto;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  background: #f9f9f9;
+}
+
+.messages {
+  height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message {
+  padding: 8px 12px;
+  border-radius: 10px;
+  max-width: 70%;
+  position: relative;
+}
+
+.sent {
+  background-color: #d1e7ff;
+  align-self: flex-end;
+}
+
+.received {
+  background-color: #f1f1f1;
+  align-self: flex-start;
+}
+
+.message-input {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.message-input input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.message-input button {
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Admin Page CSS L-260 */
+
+.a-alt {
+  cursor: pointer;
+  transition: all 200ms linear;
+}
+
+.a-alt:hover {
+  text-decoration: none;
+}
+
+.link-alt {
+  color: #c4c3ca;
+}
+
+.link-alt:hover {
+  color: #ffeba7;
+}
+
+.p-alt {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.h4-alt {
+  font-weight: 600;
+  color: #c4c3ca;
+}
+
+.h6-alt span {
+  padding: 0 20px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.section-alt {
+  position: relative;
+  width: 100%;
+  display: block;
+}
+
+.full-height-alt {
+  min-height: 100vh;
+}
+
+.card-3d-wrap-alt {
+  position: relative;
+  width: 500px;
+  max-width: 100%;
+  height: 500px;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  perspective: 800px;
+  margin-top: 60px;
+}
+
+.card-3d-wrapper-alt {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  transition: all 600ms ease-out;
+}
+
+.card-front-alt,
+.card-back-alt {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(42, 43, 56);
+  background-position: bottom center;
+  background-repeat: no-repeat;
+  background-size: 300%;
+  position: absolute;
+  border-radius: 6px;
+  left: 0;
+  top: 0;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.card-back-alt {
+  transform: rotateY(180deg);
+}
+
+
+.center-wrap-alt {
+  position: absolute;
+  width: 100%;
+  padding: 0 35px;
+  top: 50%;
+  left: 0;
+  transform: translate3d(0, -50%, 35px) perspective(100px);
+  z-index: 20;
+  display: block;
+}
+
+.form-group-alt {
+  position: relative;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.form-style-alt {
+  padding: 13px 20px;
+  padding-left: 55px;
+  height: 48px;
+  width: 100%;
+  font-weight: 500;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: 0.5px;
+  outline: none;
+  color: #c4c3ca;
+  background-color: #1f2029;
+  border: none;
+  -webkit-transition: all 200ms linear;
+  transition: all 200ms linear;
+  box-shadow: 0 4px 8px 0 rgba(21, 21, 21, .2);
+}
+
+.form-style-alt:focus,
+.form-style-alt:active {
+  border: none;
+  outline: none;
+  box-shadow: 0 4px 8px 0 rgba(21, 21, 21, .2);
+}
+
+.input-icon-alt {
+  position: absolute;
+  top: 0;
+  left: 18px;
+  height: 48px;
+  font-size: 24px;
+  line-height: 48px;
+  text-align: left;
+  color: #ffeba7;
+  -webkit-transition: all 200ms linear;
+  transition: all 200ms linear;
+}
+
+.form-group-alt input:-ms-input-placeholder,
+.form-group-alt input::-moz-placeholder,
+.form-group-alt input:-moz-placeholder,
+.form-group-alt input::-webkit-input-placeholder {
+  color: #c4c3ca;
+  opacity: 0.7;
+  -webkit-transition: all 200ms linear;
+  transition: all 200ms linear;
+}
+
+.form-group-alt input:focus:-ms-input-placeholder,
+.form-group-alt input:focus::-moz-placeholder,
+.form-group-alt input:focus:-moz-placeholder,
+.form-group-alt input:focus::-webkit-input-placeholder {
+  opacity: 0;
+  -webkit-transition: all 200ms linear;
+  transition: all 200ms linear;
+}
+
+.btn-alt {
+  border-radius: 4px;
+  height: 44px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  -webkit-transition: all 200ms linear;
+  transition: all 200ms linear;
+  padding: 0 30px;
+  letter-spacing: 1px;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: none;
+  background-color: #ffeba7;
+  color: #102770;
+  box-shadow: 0 8px 24px 0 rgba(255, 235, 167, .2);
+  text-decoration: none;
+}
+
+.btn-alt:active,
+.btn-alt:focus {
+  background-color: #102770;
+  color: #ffeba7;
+  box-shadow: 0 8px 24px 0 rgba(16, 39, 112, .2);
+}
+
+.btn-alt:hover {
+  background-color: #102770;
+  color: #ffeba7;
+  box-shadow: 0 8px 24px 0 rgba(16, 39, 112, .2);
+}
+
+.logo-alt {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  display: block;
+  z-index: 100;
+  transition: all 250ms linear;
+}
+
+.logo-alt img {
+  height: 26px;
+  width: auto;
+  display: block;
+}
+
+/* Home Details CSS L-528 */
+/* Parent Grid Layout */
+.prop-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* Two equal columns */
+  gap: 20px;
+  max-width: 90%;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  align-items: center;
+}
+
+/* Left Side - Image */
+.prop-image {
+  width: 100%;
+  height: 100%;
+}
+
+.prop-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Right Side - Details */
+.prop-details {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.prop-title {
+  color: #007bff;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.prop-location {
+  font-size: 18px;
+  color: #777;
+  margin-bottom: 15px;
+}
+
+.prop-info {
+  list-style: none;
+  padding: 0;
+}
+
+.prop-info li {
+  padding: 10px 0;
+  font-size: 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.prop-info li:last-child {
+  border-bottom: none;
+}
+
+.book-now-btn {
+  margin-top: 20px;
+  padding: 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.book-now-btn:hover {
+  background: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .property-layout {
+    grid-template-columns: 1fr;
+    /* Stack on smaller screens */
+  }
+
+  .prop-image img {
+    border-radius: 8px 8px 0 0;
+  }
+}
+
+/* Loading State */
+.loading {
+  text-align: center;
+  font-size: 20px;
+  padding: 50px;
+  color: #007bff;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #ccc;
+  border-top: 5px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
