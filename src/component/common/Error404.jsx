@@ -13,8 +13,9 @@ export const Error404 = () => {
           left: "45%",
         }}
       >
-        Error Page..
+        Error Page....!!!
       </h1>
+      <h3>You have entered a wrong route</h3>
     </div>
   );
 };
