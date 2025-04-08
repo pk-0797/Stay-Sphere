@@ -92,10 +92,10 @@ export const HostSidebar = () => {
 
   const navigate = useNavigate();
 
-  const handleLogout =() => {
+  const handleLogout = () => {
     localStorage.clear();
-    navigate("/")
-  }
+    navigate("/");
+  };
 
   return (
     <>
@@ -169,7 +169,17 @@ export const HostSidebar = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/" className="nav-link text-danger" onClick={handleLogout}>
+                  <Link to="contact-admin" className="nav-link">
+                    <i className=" nav-icon bi bi-flag-fill"></i>
+                    <p>Report Admin</p>
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    to="/"
+                    className="nav-link text-danger"
+                    onClick={handleLogout}
+                  >
                     <i className="nav-icon bi bi-box-arrow-right" />
                     <p>Logout</p>
                   </Link>

@@ -104,7 +104,7 @@ export const AdminSidebar = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="" className="nav-link">
+                  <Link to="allreports" className="nav-link">
                     <i className="nav-icon bi bi-flag" />
                     <p>Reports & Issues</p>
                   </Link>

@@ -109,6 +109,12 @@ export const UserSidebar = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
+                  <Link to="contact-admin" className="nav-link">
+                  <i className=" nav-icon bi bi-flag-fill"></i>
+                    <p>Report Admin</p>
+                  </Link>
+                </li>
+                <li className="nav-item">
                   <Link to="/" className="nav-link text-danger" onClick={handleLogout}>
                     <i className="nav-icon bi bi-box-arrow-right" />
                     <p>Logout</p>

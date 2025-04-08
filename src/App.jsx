@@ -40,6 +40,9 @@ import { ManageBookings } from "./component/admin/ManageBookings";
 import { HomeDetails } from "./component/user/HomeDetails";
 import { PropertyDetails } from "./component/common/PropertyDetails";
 
+import { UserMessages } from "./component/admin/UserMessages";
+import AdminReport from "./component/host/AdminReport";
+import ReportAdmin from "./component/user/ReportAdmin";
 
 // className= "app-wrapper" in UserSidebar and HostSidebar
 
@@ -56,6 +59,7 @@ function App() {
             <Route path="/login" element={<Login />}></Route>
             <Route path="/signup" element={<SignUp />}></Route>
             <Route path="/forgotpassword" element={<ForgetPass />}></Route>
+
             <Route
               path="/resetpassword/:token"
               element={<ResetPassword />}
@@ -88,6 +92,7 @@ function App() {
                   element={<ReviewFormForUser />}
                 />
                 <Route path="notifications" element={<Notifications />}></Route>
+                <Route path="contact-admin" element={<ReportAdmin />} />
               </Route>
             </Route>
 
@@ -109,6 +114,7 @@ function App() {
                   path="bookingrequest"
                   element={<UpdateOrCancelBooking></UpdateOrCancelBooking>}
                 ></Route>
+                <Route path="contact-admin" element={<AdminReport />} />
               </Route>
             </Route>
 
@@ -127,6 +133,7 @@ function App() {
                   element={<ManageProperties />}
                 ></Route>
                 <Route path="allbookings" element={<ManageBookings />}></Route>
+                <Route path="allreports" element={<UserMessages />} />
               </Route>
             </Route>
             <Route path="/*" element={<Error404 />}></Route>
