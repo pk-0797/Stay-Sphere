@@ -144,7 +144,7 @@ export const ViewMyProperty = () => {
                         className="btn btn-primary mt-2"
                         onClick={() => handleUpdatePrice(property)}
                       >
-                        Update Price
+                        Update
                       </button>
                     </td>
                     

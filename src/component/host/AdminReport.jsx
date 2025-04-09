@@ -93,6 +93,11 @@ export const AdminReport = () => {
           />
         </div>
 
+        <div className="alert alert-info text-sm mb-3" role="alert">
+          <strong>Note:</strong> After submitting your report, please check your
+          email for the latest updates and admin responses.
+        </div>
+
         <div className="d-grid">
           <button className="btn btn-primary" onClick={handleSend}>
             Send Message

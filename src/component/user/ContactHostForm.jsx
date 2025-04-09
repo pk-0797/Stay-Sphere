@@ -24,7 +24,6 @@
 //     };
 //     fetchHostDetails();
 //   }, [hostId]);
-  
 
 //   // Handle Input Changes
 //   const handleChange = (e) => {
@@ -45,7 +44,6 @@
 //       setStatus({ type: "error", message: err.response?.data?.message || "Failed to send message. Try again!" });
 //     }
 //   };
-  
 
 //   return (
 //     <div className="container mt-4">
@@ -149,7 +147,10 @@ export const ContactHostForm = () => {
         const res = await axios.get(`/user/${hostId}`);
         setHostDetails(res.data.data);
       } catch (err) {
-        console.error("Error fetching host details:", err.response?.data || err.message);
+        console.error(
+          "Error fetching host details:",
+          err.response?.data || err.message
+        );
       }
     };
     fetchHostDetails();
@@ -161,7 +162,9 @@ export const ContactHostForm = () => {
 
   const toggleIssueSelection = (issue) => {
     setSelectedIssues((prevIssues) =>
-      prevIssues.includes(issue) ? prevIssues.filter((i) => i !== issue) : [...prevIssues, issue]
+      prevIssues.includes(issue)
+        ? prevIssues.filter((i) => i !== issue)
+        : [...prevIssues, issue]
     );
   };
 
@@ -173,7 +176,9 @@ export const ContactHostForm = () => {
         hostId,
         name: formData.name,
         email: formData.email,
-        message: selectedIssues.join(", ") + (formData.message ? ` | Additional: ${formData.message}` : ""),
+        message:
+          selectedIssues.join(", ") +
+          (formData.message ? ` | Additional: ${formData.message}` : ""),
       });
       setStatus({ type: "success", message: response.data.message });
       setFormData({ name: "", email: "", message: "" });
@@ -181,7 +186,8 @@ export const ContactHostForm = () => {
     } catch (err) {
       setStatus({
         type: "error",
-        message: err.response?.data?.message || "Failed to send message. Try again!",
+        message:
+          err.response?.data?.message || "Failed to send message. Try again!",
       });
     }
   };
@@ -191,14 +197,20 @@ export const ContactHostForm = () => {
       <h3 className="text-center text-primary">Contact Host</h3>
 
       {hostDetails && (
-        <div className="alert alert-info text-center">
-          Contacting Host: <strong>{hostDetails.fullName}</strong> (<i>{hostDetails.email}</i>)
+        <div className="alert alert-dark text-center">
+          Contacting Host: <strong>{hostDetails.fullName}</strong> (
+          <i>{hostDetails.email}</i>)
         </div>
       )}
 
       <div className="card shadow p-4 mt-3">
         {status && (
-          <div className={`alert alert-${status.type === "success" ? "success" : "danger"}`} role="alert">
+          <div
+            className={`alert alert-${
+              status.type === "success" ? "success" : "danger"
+            }`}
+            role="alert"
+          >
             {status.message}
           </div>
         )}
@@ -235,7 +247,11 @@ export const ContactHostForm = () => {
                 <button
                   key={index}
                   type="button"
-                  className={`btn ${selectedIssues.includes(issue) ? "btn-primary" : "btn-outline-primary"}`}
+                  className={`btn ${
+                    selectedIssues.includes(issue)
+                      ? "btn-primary"
+                      : "btn-outline-primary"
+                  }`}
                   onClick={() => toggleIssueSelection(issue)}
                 >
                   {issue}
@@ -258,8 +274,16 @@ export const ContactHostForm = () => {
             </div>
           )}
 
-          <button type="submit" className="btn btn-color px-5 mb-5 w-100 "
-                id="log-btn">
+          <div className="alert alert-info text-sm mb-3" role="alert">
+            <strong>Note:</strong> After submitting your response, please check
+            your email for the latest updates and host responses.
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-color px-5 mb-5 w-100 "
+            id="log-btn"
+          >
             Send Message
           </button>
         </form>
@@ -267,4 +291,3 @@ export const ContactHostForm = () => {
     </div>
   );
 };
-

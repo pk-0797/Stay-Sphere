@@ -25,11 +25,19 @@ export const ReportAdmin = () => {
 
   const handleSend = async () => {
     if (!category) {
-      return Swal.fire("Missing Category", "Please select a category.", "warning");
+      return Swal.fire(
+        "Missing Category",
+        "Please select a category.",
+        "warning"
+      );
     }
 
     if (!message.trim()) {
-      return Swal.fire("Empty Message", "Please write your message.", "warning");
+      return Swal.fire(
+        "Empty Message",
+        "Please write your message.",
+        "warning"
+      );
     }
 
     const payload = {
@@ -44,9 +52,16 @@ export const ReportAdmin = () => {
       console.log("✅ Message sent successfully:", response.data);
       setMessage("");
       setCategory("");
-      Swal.fire("Message Sent", "Your message has been sent to the admin.", "success");
+      Swal.fire(
+        "Message Sent",
+        "Your message has been sent to the admin.",
+        "success"
+      );
     } catch (error) {
-      console.error("🚨 Error sending message:", error.response?.data || error.message);
+      console.error(
+        "🚨 Error sending message:",
+        error.response?.data || error.message
+      );
       Swal.fire("Error", "Failed to send message. Try again later.", "error");
     }
   };
@@ -54,7 +69,9 @@ export const ReportAdmin = () => {
   return (
     <div className="container mt-5">
       <div className="card shadow p-4">
-        <h3 className="text-center mb-4 text-primary">Report an Issue to Admin</h3>
+        <h3 className="text-center mb-4 text-primary">
+          Report an Issue to Admin
+        </h3>
 
         <div className="mb-3">
           <label htmlFor="category" className="form-label">
@@ -87,6 +104,11 @@ export const ReportAdmin = () => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
+        </div>
+
+        <div className="alert alert-info text-sm mb-3" role="alert">
+          <strong>Note:</strong> After submitting your report, please check your
+          email for the latest updates and admin responses.
         </div>
 
         <div className="d-grid">

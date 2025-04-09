@@ -50,7 +50,9 @@ export const MessagesFromUsers = () => {
       if (result.isConfirmed) {
         try {
           await axios.delete(`/messages/delete/${id}`);
-          setMessages((prevMessages) => prevMessages.filter((msg) => msg._id !== id));
+          setMessages((prevMessages) =>
+            prevMessages.filter((msg) => msg._id !== id)
+          );
           Swal.fire("Deleted!", "The message has been deleted.", "success");
         } catch (err) {
           console.error("Error deleting message:", err);
@@ -105,7 +107,9 @@ export const MessagesFromUsers = () => {
                   <td>{msg.email || "N/A"}</td>
                   <td>{msg.bookingId || "N/A"}</td>
                   <td>{property.title || "Fetching..."}</td>
-                  <td style={{ maxWidth: "250px", whiteSpace: "pre-wrap" }}>{msg.message || "No message"}</td>
+                  <td style={{ maxWidth: "250px", whiteSpace: "pre-wrap" }}>
+                    {msg.message || "No message"}
+                  </td>
                   <td>{new Date(msg.createdAt).toLocaleString()}</td>
                   <td>
                     <button

@@ -37,7 +37,7 @@ export const UpdatePropertyPrice = () => {
   return (
     <div className="container mx-auto p-4">
       <ToastContainer autoClose={1500} />
-      <h2 className="text-center">Update Property Price</h2>
+      <h2 className="text-center text-primary">Update Property Price</h2>
 
       <form onSubmit={handlePriceUpdate}>
         <div className="mb-3">

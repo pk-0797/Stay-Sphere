@@ -61,7 +61,7 @@ export const AdminHome = () => {
               📊 Platform Analytics
             </Link>
 
-            <Link className="btn btn-outline-danger mt-3 mx-2 px-4 py-2 rounded-pill shadow-sm">
+            <Link to="/admin/allreports" className="btn btn-outline-danger mt-3 mx-2 px-4 py-2 rounded-pill shadow-sm">
               🚨 Reports & Issues
             </Link>
           </div>

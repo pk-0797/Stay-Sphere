@@ -31,38 +31,15 @@ export const UserMessages = () => {
     }
   };
 
-  const [replyText, setReplyText] = useState("");
-
-const handleReply = async (userId) => {
-  const adminId = localStorage.getItem("id");
-
-  if (!replyText.trim()) return;
-
-  const payload = {
-    senderId: adminId,
-    receiverId: userId,
-    message: replyText,
-  };
-
-  try {
-    await axios.post("/report/admin/reply", payload);
-    setReplyText("");
-    Swal.fire("Success", "Reply sent to user!", "success");
-  } catch (err) {
-    Swal.fire("Error", "Failed to send reply.", "error");
-  }
-};
-
-
   return (
     <div className="container mt-4">
       <div className="card shadow">
-        <div className="card-header bg-dark text-white fw-bold">
-          Reports from Users, Hosts & Guests
+        <div className="card-header bg-dark  text-center text-white fw-bold">
+          Reports from Hosts & Guests
         </div>
         <div className="card-body">
           {messages.length === 0 ? (
-            <p className="text-muted">No messages yet.</p>
+            <p className="text-muted text-center">No messages yet.</p>
           ) : (
             <ul className="list-group">
               {messages.map((msg) => (
@@ -88,7 +65,6 @@ const handleReply = async (userId) => {
             </ul>
           )}
         </div>
-        
       </div>
     </div>
   );
