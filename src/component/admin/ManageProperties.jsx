@@ -5,6 +5,12 @@ import {
   CircularProgress,
   Button,
   TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  Paper,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
@@ -15,6 +21,9 @@ export const ManageProperties = () => {
   const [properties, setproperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState(null);
+
   const MySwal = withReactContent(Swal);
 
   const getAllProperties = async () => {
@@ -32,6 +41,24 @@ export const ManageProperties = () => {
   useEffect(() => {
     getAllProperties();
   }, []);
+
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+
+    const filtered = properties.filter((p) => {
+      const title = p.title?.toLowerCase();
+      const hostName = p.userId?.fullName?.toLowerCase();
+      const hostEmail = p.userId?.email?.toLowerCase();
+
+      return (
+        title?.includes(query) ||
+        hostName?.includes(query) ||
+        hostEmail?.includes(query)
+      );
+    });
+
+    setFilteredProperties(filtered);
+  };
 
   const handleDeleteUser = async (id) => {
     MySwal.fire({
@@ -58,150 +85,190 @@ export const ManageProperties = () => {
     });
   };
 
-  const handleSearch = (e) => {
-    const query = e.target.value.toLowerCase();
-    const filtered = properties.filter((p) =>
-      p.title.toLowerCase().includes(query)
-    );
-    setFilteredProperties(filtered);
+  const handleEditClick = (property) => {
+    setSelectedProperty({ ...property });
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+    setSelectedProperty(null);
+  };
+
+  const handleDialogChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedProperty((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleDialogSubmit = async () => {
+    try {
+      await axios.put(`/property/update-details/${selectedProperty._id}`, {
+        title: selectedProperty.title,
+        totalPrice: selectedProperty.totalPrice,
+        address: selectedProperty.address,
+      });
+
+      MySwal.fire("Updated!", "Property updated and host notified.", "success");
+      getAllProperties();
+      handleDialogClose();
+    } catch (err) {
+      console.error("Update failed", err);
+      MySwal.fire("Error", "Could not update property", "error");
+    }
   };
 
   const columns = [
-    { field: "_id", headerName: "Property Unique ID", width: 200 },
+    { field: "_id", headerName: "Property Unique ID", width: 180 },
     { field: "title", headerName: "Title", width: 150 },
     { field: "propertyType", headerName: "Type", width: 100 },
-    { field: "roomType", headerName: "Room Type", width: 100 },
+    { field: "roomType", headerName: "Room", width: 100 },
     {
       field: "amenities",
       headerName: "Amenities",
-      width: 180,
+      width: 200,
       renderCell: (params) => (params.value ? params.value.join(", ") : "N/A"),
     },
-    { field: "address", headerName: "Address", width: 150 },
+    { field: "address", headerName: "Address", width: 180 },
     { field: "pincode", headerName: "Pincode", width: 90 },
     { field: "totalPrice", headerName: "Price/Day", width: 110 },
     {
       field: "hostName",
       headerName: "Host Name",
       width: 150,
-      renderCell: (params) => {
-        const user = params.row.userId;
-        return user?.fullName || "N/A";
-      },
+      renderCell: (params) => params.row.userId?.fullName || "N/A",
     },
     {
       field: "hostEmail",
       headerName: "Host Email",
       width: 200,
-      renderCell: (params) => {
-        const user = params.row.userId;
-        return user?.email || "N/A";
-      },
+      renderCell: (params) => params.row.userId?.email || "N/A",
     },
     {
       field: "hostPhone",
       headerName: "Host Phone",
       width: 130,
-      renderCell: (params) => {
-        const user = params.row.userId;
-        return user?.phoneNo || "N/A";
-      },
+      renderCell: (params) => params.row.userId?.phoneNo || "N/A",
     },
     {
       field: "actions",
       headerName: "Actions",
-      width: 100,
+      width: 160,
+      sortable: false,
       renderCell: (params) => (
-        <Button
-          variant="contained"
-          color="error"
-          size="small"
-          onClick={() => handleDeleteUser(params.row._id)}
-        >
-          Delete
-        </Button>
+        <Stack direction="row" spacing={1}>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => handleEditClick(params.row)}
+          >
+            Edit
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            size="small"
+            onClick={() => handleDeleteUser(params.row._id)}
+          >
+            Delete
+          </Button>
+        </Stack>
       ),
     },
   ];
 
   return (
-    <Box sx={{ maxWidth: "95%", margin: "auto", mt: 4 }}>
-      <Typography
-        variant="h4"
-        gutterBottom
-        sx={{
-          fontFamily: "Spinnaker",
-          fontWeight: "bold",
-          background: "linear-gradient(90deg, #2D6CDF 0%, #5C8EF3 100%)",
-          color: "white",
-          p: 2,
-          borderRadius: 2,
-          textAlign: "center",
-          boxShadow: 2,
-          mb: 3,
-        }}
-      >
-        🏘️ All Properties Details
-      </Typography>
+    <Box sx={{ maxWidth: "96%", margin: "auto", mt: 4 }}>
+      <Paper elevation={3} sx={{ p: 3, mb: 3, borderRadius: 2 }}>
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            fontFamily: "Spinnaker",
+            fontWeight: "bold",
+            textAlign: "center",
+            color: "#2D6CDF",
+          }}
+        >
+          🏘️ Manage All Property Listings
+        </Typography>
 
-      <TextField
-        label="Search by Title"
-        variant="outlined"
-        size="small"
-        fullWidth
-        sx={{ mb: 2 }}
-        onChange={handleSearch}
-      />
+        <TextField
+          label="Search by Title, Host Name or Email"
+          variant="outlined"
+          size="small"
+          fullWidth
+          sx={{ mt: 2 }}
+          onChange={handleSearch}
+        />
+      </Paper>
 
       {loading ? (
         <Box textAlign="center" mt={3}>
           <CircularProgress />
         </Box>
       ) : (
-        <DataGrid
-          rows={filteredProperties}
-          columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[5, 10, 20, 50, 100]}
-          checkboxSelection
-          getRowId={(row) => row._id}
-          sx={{
-            backgroundColor: "white",
-            boxShadow: 3,
-            borderRadius: 2,
-            p: 2,
-            "& .MuiDataGrid-columnHeaders": {
-              fontWeight: "bold",
-              textTransform: "uppercase",
-              backgroundColor: "#2D6CDF",
-              color: "black",
-            },
-            "& .MuiDataGrid-columnHeaderTitle": {
-              fontWeight: "bold",
-              whiteSpace: "normal",
-              lineHeight: "1.4rem",
-              textAlign: "center",
-            },
-            "& .MuiDataGrid-cell": {
-              textAlign: "center",
-              padding: "8px",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            },
-
-            "& .MuiDataGrid-row:hover": {
-              backgroundColor: "#f1f1f1",
-            },
-            "& .MuiDataGrid-footerContainer": {
-              borderTop: "1px solid #ddd",
-            },
-            "& .MuiDataGrid-checkboxInput": {
-              color: "#2D6CDF",
-            },
-          }}
-        />
+        <Paper elevation={3} sx={{ borderRadius: 2 }}>
+          <DataGrid
+            rows={filteredProperties}
+            columns={columns}
+            pageSize={10}
+            rowsPerPageOptions={[10, 20, 50]}
+            autoHeight
+            checkboxSelection
+            getRowId={(row) => row._id}
+            sx={{
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: "#E3F2FD",
+                fontWeight: "bold",
+              },
+              "& .MuiDataGrid-row:hover": {
+                backgroundColor: "#f5f5f5",
+              },
+              "& .MuiDataGrid-cell": {
+                whiteSpace: "nowrap",
+              },
+            }}
+          />
+        </Paper>
       )}
+
+      {/* Edit Dialog */}
+      <Dialog open={openDialog} onClose={handleDialogClose} fullWidth>
+        <DialogTitle>Edit Property</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="Title"
+            name="title"
+            value={selectedProperty?.title || ""}
+            onChange={handleDialogChange}
+            fullWidth
+          />
+          <TextField
+            margin="dense"
+            label="Total Price"
+            name="totalPrice"
+            type="number"
+            value={selectedProperty?.totalPrice || ""}
+            onChange={handleDialogChange}
+            fullWidth
+          />
+          <TextField
+            margin="dense"
+            label="Address"
+            name="address"
+            value={selectedProperty?.address || ""}
+            onChange={handleDialogChange}
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose}>Cancel</Button>
+          <Button onClick={handleDialogSubmit} variant="contained">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
