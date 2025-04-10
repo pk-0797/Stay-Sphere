@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 export const AdminHome = () => {
   const [user, setUser] = useState({});
-
   const userId = localStorage.getItem("id");
 
   useEffect(() => {
