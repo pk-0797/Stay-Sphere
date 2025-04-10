@@ -11,10 +11,9 @@ import {
   Chip,
   Divider,
   TextField,
+  Paper,
 } from "@mui/material";
 import toast from "react-hot-toast";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
 import Swal from "sweetalert2";
 
 export const ManageBookings = () => {
@@ -58,32 +57,6 @@ export const ManageBookings = () => {
     fetchBookings();
   }, []);
 
-  const handleConfirmBooking = async (id) => {
-    try {
-      await axios.put(`/booking/confirm/${id}`);
-      toast.success("Booking confirmed!");
-      setBookings((prev) =>
-        prev.map((b) => (b._id === id ? { ...b, status: "Confirmed" } : b))
-      );
-    } catch (error) {
-      toast.error("Failed to confirm booking");
-      console.error(error);
-    }
-  };
-
-  const handleCancelBooking = async (id) => {
-    try {
-      await axios.put(`/booking/cancel/${id}`);
-      toast.success("Booking canceled!");
-      setBookings((prev) =>
-        prev.map((b) => (b._id === id ? { ...b, status: "Cancelled" } : b))
-      );
-    } catch (error) {
-      toast.error("Failed to cancel booking");
-      console.error(error);
-    }
-  };
-
   const statusColor = (status) => {
     if (status === "Confirmed") return "success";
     if (status === "Cancelled") return "error";
@@ -98,180 +71,134 @@ export const ManageBookings = () => {
       booking.propertyTitle?.toLowerCase().includes(query) ||
       booking.propertyLocation?.toLowerCase().includes(query) ||
       booking.hostName?.toLowerCase().includes(query) ||
-      booking.hostEmail?.toLowerCase().includes(query)
+      booking.hostEmail?.toLowerCase().includes(query) ||
+      booking._id?.toLowerCase().includes(query)
     );
   });
 
   return (
-    <Box p={5}>
-      <Typography
-        variant="h4"
-        mb={4}
-        fontWeight="bold"
-        textTransform="Uppercase"
-        color="primary"
-        textAlign="center"
-      >
-        Manage All Bookings
-      </Typography>
+    <Box p={{ xs: 2, md: 5 }}>
+      <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 3 }}>
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          color="primary"
+          textAlign="center"
+          gutterBottom
+        >
+          📋 Manage All Bookings
+        </Typography>
 
-      <TextField
-        label="Search Bookings"
-        variant="outlined"
-        size="small"
-        fullWidth
-        sx={{ mb: 3, mx: "auto", display: "block" }}
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
+        <TextField
+          label="Search by Booking ID, Guest, Host, or Property"
+          variant="outlined"
+          size="small"
+          fullWidth
+          sx={{ mt: 2 }}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </Paper>
 
       {loading ? (
         <Box display="flex" justifyContent="center" mt={5}>
           <CircularProgress />
         </Box>
+      ) : filteredBookings.length === 0 ? (
+        <Typography textAlign="center" color="text.secondary">
+          No bookings found.
+        </Typography>
       ) : (
-        <Grid container spacing={6}>
+        <Grid container spacing={4}>
           {filteredBookings.map((booking) => (
-            <Grid item xs={12} md={6} lg={4} key={booking._id}>
+            <Grid item xs={12} sm={6} md={4} key={booking._id}>
               <Card
                 sx={{
-                  padding: 1,
-                  boxShadow: 3,
-                  borderRadius: 4,
-                  bgcolor: "#f9f9f9",
-                  transition: "transform 0.2s ease-in-out",
+                  p: 2,
+                  borderRadius: 3,
+                  bgcolor: "#fdfdfd",
+                  boxShadow: 4,
+                  transition: "0.3s",
                   "&:hover": {
-                    transform: "scale(1)",
+                    transform: "translateY(-4px)",
+                    boxShadow: 6,
                   },
                 }}
               >
                 <CardContent>
-                  <Typography variant="h6" fontWeight="bold" color="primary.dark">
-                    🏠 {booking.propertyTitle}
-                  </Typography>
                   <Typography
-                    variant="caption"
-                    color="text.secondary"
+                    variant="h6"
+                    fontWeight="bold"
                     gutterBottom
+                    color="primary"
                   >
-                    📍 {booking.propertyLocation}
+                    {booking.propertyTitle}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {booking.propertyLocation}
                   </Typography>
 
-                  <Box my={1}>
-                    <Chip
-                      label={`Status: ${booking.status}`}
-                      color={statusColor(booking.status)}
-                      size="small"
-                      sx={{
-                        mb: 1,
-                        fontWeight: "bold",
-                        bgcolor:
-                          booking.status === "Confirmed"
-                            ? "success.light"
-                            : booking.status === "Cancelled"
-                            ? "error.light"
-                            : "warning.light",
-                      }}
-                    />
-                    <Typography variant="body2">
-                      📅 Booking Date: {booking.bookingDate}
-                    </Typography>
-                    <Typography variant="body2">
-                      ⏰ Booking Time: {booking.bookingTime}
-                    </Typography>
-                  </Box>
+                  <Chip
+                    label={`Status: ${booking.status}`}
+                    color={statusColor(booking.status)}
+                    size="small"
+                    sx={{
+                      mt: 1,
+                      fontWeight: "bold",
+                      bgcolor:
+                        booking.status === "Confirmed"
+                          ? "success.light"
+                          : booking.status === "Cancelled"
+                          ? "error.light"
+                          : "warning.light",
+                    }}
+                  />
 
-                  <Divider sx={{ my: 1 }} />
+                  <Divider sx={{ my: 2 }} />
 
-                  <Box mt={2}>
-                    <Typography variant="subtitle1" fontWeight="bold">
-                      👤 Guest Info
-                    </Typography>
-                    <Typography variant="body2">
-                      Name: {booking.guestName}
-                    </Typography>
-                    <Typography variant="body2" sx={{ wordBreak: "break-word" }}>
-                      Email: {booking.guestEmail}
-                    </Typography>
-                    <Typography variant="body2">
-                      Phone: {booking.guestPhone}
-                    </Typography>
-                  </Box>
+                  <Typography variant="subtitle2" fontWeight="bold">
+                    Booking Info
+                  </Typography>
+                  <Typography variant="body2">
+                    🆔 <b>ID:</b> {booking._id}
+                  </Typography>
+                  <Typography variant="body2">
+                    📅 <b>Date:</b> {booking.bookingDate}
+                  </Typography>
+                  <Typography variant="body2">
+                    ⏰ <b>Time:</b> {booking.bookingTime}
+                  </Typography>
+                  <Typography variant="body2">
+                    💰 <b>Price:</b> ₹{booking.totalPrice}
+                  </Typography>
+                  <Typography variant="body2">
+                    🏁 <b>Check-In:</b> {booking.checkIn?.slice(0, 10)}
+                  </Typography>
+                  <Typography variant="body2">
+                    🏁 <b>Check-Out:</b> {booking.checkOut?.slice(0, 10)}
+                  </Typography>
 
-                  <Box mt={2}>
-                    <Typography variant="subtitle1" fontWeight="bold">
-                      🧑‍💼 Host Info
-                    </Typography>
-                    <Typography variant="body2">
-                      Name: {booking.hostName}
-                    </Typography>
-                    <Typography variant="body2" sx={{ wordBreak: "break-word" }}>
-                      Email: {booking.hostEmail}
-                    </Typography>
-                    <Typography variant="body2">
-                      Phone: {booking.hostPhone}
-                    </Typography>
-                  </Box>
+                  <Divider sx={{ my: 2 }} />
 
-                  <Box mt={2}>
-                    <Typography variant="body2">
-                      📆 Check-In: {booking.checkIn?.slice(0, 10)}
-                    </Typography>
-                    <Typography variant="body2">
-                      📆 Check-Out: {booking.checkOut?.slice(0, 10)}
-                    </Typography>
-                    <Typography variant="body2">
-                      💰 Total Price: ₹{booking.totalPrice}/-
-                    </Typography>
-                  </Box>
+                  <Typography variant="subtitle2" fontWeight="bold">
+                    Guest
+                  </Typography>
+                  <Typography variant="body2">👤 {booking.guestName}</Typography>
+                  <Typography variant="body2" sx={{ wordBreak: "break-word" }}>
+                    📧 {booking.guestEmail}
+                  </Typography>
+                  <Typography variant="body2">📞 {booking.guestPhone}</Typography>
 
-                  <Box mt={3} display="flex" justifyContent="space-between">
-                    <Button
-                      variant="contained"
-                      color="success"
-                      size="small"
-                      startIcon={<CheckCircleIcon />}
-                      onClick={() =>
-                        Swal.fire({
-                          title: "Are you sure?",
-                          text: "Do you want to confirm this booking?",
-                          icon: "question",
-                          showCancelButton: true,
-                          confirmButtonText: "Yes, confirm it!",
-                        }).then((result) => {
-                          if (result.isConfirmed) {
-                            handleConfirmBooking(booking._id);
-                          }
-                        })
-                      }
-                      disabled={booking.status === "Confirmed"}
-                    >
-                      Confirm
-                    </Button>
+                  <Divider sx={{ my: 2 }} />
 
-                    <Button
-                      variant="contained"
-                      color="error"
-                      size="small"
-                      startIcon={<CancelIcon />}
-                      onClick={() =>
-                        Swal.fire({
-                          title: "Are you sure?",
-                          text: "Do you want to cancel this booking?",
-                          icon: "warning",
-                          showCancelButton: true,
-                          confirmButtonText: "Yes, cancel it!",
-                        }).then((result) => {
-                          if (result.isConfirmed) {
-                            handleCancelBooking(booking._id);
-                          }
-                        })
-                      }
-                      disabled={booking.status === "Cancelled"}
-                    >
-                      Cancel
-                    </Button>
-                  </Box>
+                  <Typography variant="subtitle2" fontWeight="bold">
+                    Host
+                  </Typography>
+                  <Typography variant="body2">🧑‍💼 {booking.hostName}</Typography>
+                  <Typography variant="body2" sx={{ wordBreak: "break-word" }}>
+                    📧 {booking.hostEmail}
+                  </Typography>
+                  <Typography variant="body2">📞 {booking.hostPhone}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -281,7 +208,4 @@ export const ManageBookings = () => {
     </Box>
   );
 };
-
-
-
 

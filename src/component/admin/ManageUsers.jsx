@@ -1,4 +1,14 @@
-import { Box, Typography, CircularProgress, Button, TextField } from "@mui/material";
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  Button,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -8,6 +18,8 @@ export const ManageUsers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const getAllUsers = async () => {
     try {
@@ -34,7 +46,6 @@ export const ManageUsers = () => {
         try {
           await axios.delete(`/user/${userId}`);
           setUsers(users.filter((user) => user._id !== userId));
-
           Swal.fire("Deleted!", "The user has been deleted.", "success");
         } catch (error) {
           console.error("Error deleting user:", error);
@@ -43,6 +54,32 @@ export const ManageUsers = () => {
       }
     });
   };
+
+  const handleEditClick = (user) => {
+    setCurrentUser(user);
+    setEditDialogOpen(true);
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setCurrentUser((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleUpdateUser = async () => {
+    try {
+      const res = await axios.put(`/user/${currentUser._id}`, {
+        ...currentUser,
+        updatedByAdmin: true,
+      });
+      setUsers(users.map((user) => (user._id === currentUser._id ? res.data.data : user)));
+      setEditDialogOpen(false);
+      Swal.fire("Success", "User updated successfully", "success");
+    } catch (error) {
+      console.error("Update error:", error);
+      Swal.fire("Error", "Failed to update user", "error");
+    }
+  };
+  
 
   useEffect(() => {
     getAllUsers();
@@ -58,18 +95,29 @@ export const ManageUsers = () => {
     {
       field: "actions",
       headerName: "Actions",
-      width: 150,
+      width: 180,
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
-        <Button
-          variant="contained"
-          color="error"
-          size="small"
-          onClick={() => handleDeleteUser(params.row._id)}
-        >
-          Delete
-        </Button>
+        <>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            sx={{ mr: 1 }}
+            onClick={() => handleEditClick(params.row)}
+          >
+            Edit
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            size="small"
+            onClick={() => handleDeleteUser(params.row._id)}
+          >
+            Delete
+          </Button>
+        </>
       ),
     },
   ];
@@ -79,7 +127,7 @@ export const ManageUsers = () => {
     const email = (user.email || "").toString().toLowerCase();
     const role = (user.role || "").toString().toLowerCase();
     const phoneNo = (user.phoneNo || "").toString().toLowerCase();
-  
+
     const query = searchQuery.toLowerCase();
     return (
       fullName.includes(query) ||
@@ -88,7 +136,6 @@ export const ManageUsers = () => {
       phoneNo.includes(query)
     );
   });
-  
 
   return (
     <Box sx={{ maxWidth: "90%", margin: "auto", mt: 4, textAlign: "center" }}>
@@ -111,7 +158,7 @@ export const ManageUsers = () => {
         label="Search Users"
         variant="outlined"
         size="small"
-        sx={{ my: 2,  }}
+        sx={{ my: 2 }}
         fullWidth
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
@@ -140,6 +187,59 @@ export const ManageUsers = () => {
           }}
         />
       )}
+
+      {/* Edit User Dialog */}
+      <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
+        <DialogTitle>Edit User</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="Full Name"
+            name="fullName"
+            value={currentUser?.fullName || ""}
+            onChange={handleEditChange}
+            fullWidth
+          />
+          <TextField
+            margin="dense"
+            label="Email"
+            name="email"
+            value={currentUser?.email || ""}
+            onChange={handleEditChange}
+            fullWidth
+          />
+          <TextField
+            margin="dense"
+            label="Role"
+            name="role"
+            value={currentUser?.role || ""}
+            onChange={handleEditChange}
+            fullWidth
+          />
+          <TextField
+            margin="dense"
+            label="Phone Number"
+            name="phoneNo"
+            value={currentUser?.phoneNo || ""}
+            onChange={handleEditChange}
+            fullWidth
+          />
+          <TextField
+            margin="dense"
+            label="Age"
+            name="age"
+            value={currentUser?.age || ""}
+            onChange={handleEditChange}
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEditDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleUpdateUser} color="primary" variant="contained">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
