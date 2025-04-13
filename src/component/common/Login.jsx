@@ -33,7 +33,7 @@ export const Login = () => {
           } else if (res.data.data.role === "host") {
             navigate('/host/home');
           }else if (res.data.data.role === "admin") {
-            navigate('/admin/home');
+            navigate('/admin/dashboard');
           }
         }, 1000);
       } 
