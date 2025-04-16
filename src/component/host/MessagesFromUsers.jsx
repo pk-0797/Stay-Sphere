@@ -13,7 +13,12 @@ export const MessagesFromUsers = () => {
   const fetchMessages = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`/messages/all`);
+      const hostId = localStorage.getItem("id"); // Or from your auth context
+
+      const res = await axios.get(`/messages/all`, {
+        params: { hostId },
+      });
+
       if (res.data && Array.isArray(res.data.data)) {
         setMessages(res.data.data);
         res.data.data.forEach((msg) => fetchPropertyDetails(msg.bookingId));

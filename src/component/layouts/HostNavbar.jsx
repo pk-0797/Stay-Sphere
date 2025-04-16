@@ -28,30 +28,64 @@ export const HostNavbar = ({ toggleSidebar }) => {
     return () => clearInterval(interval);
   }, [hostId]);
 
+  // useEffect(() => {
+  //   const fetchUnreadMessages = async () => {
+  //     try {
+  //       const res = await axios.get(`/messages/all`);
+  //       const unreadCount = res.data.data.filter((msg) => !msg.isRead).length;
+  //       setNewMessages(unreadCount);
+  //     } catch (error) {
+  //       console.error("Error fetching messages:", error);
+  //     }
+  //   };
+
+  //   fetchUnreadMessages();
+
+  //   // Real-time update using socket.io
+  //   socket.on("newMessage", (newMessage) => {
+  //     setNewMessages((prev) => prev + 1);
+  //   });
+
+  //   const interval = setInterval(fetchUnreadMessages, 5000);
+  //   return () => {
+  //     clearInterval(interval);
+  //     socket.off("newMessage");
+  //   };
+  // }, []);
   useEffect(() => {
     const fetchUnreadMessages = async () => {
       try {
-        const res = await axios.get(`/messages/all`);
+        // Get the host ID from localStorage
+        const hostId = localStorage.getItem("id");
+  
+        // Fetch messages associated with this host
+        const res = await axios.get(`/messages/host/${hostId}`);
+        
+        // Filter for unread messages
         const unreadCount = res.data.data.filter((msg) => !msg.isRead).length;
         setNewMessages(unreadCount);
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
     };
-
+  
     fetchUnreadMessages();
-
+  
     // Real-time update using socket.io
     socket.on("newMessage", (newMessage) => {
-      setNewMessages((prev) => prev + 1);
+      // Check if the new message is for this host
+      if (newMessage.hostId === hostId) {
+        setNewMessages((prev) => prev + 1);
+      }
     });
-
+  
     const interval = setInterval(fetchUnreadMessages, 5000);
     return () => {
       clearInterval(interval);
       socket.off("newMessage");
     };
   }, []);
+  
 
   useEffect(() => {
     const tooltipTriggerList = document.querySelectorAll(
@@ -184,7 +218,7 @@ export const HostNavbar = ({ toggleSidebar }) => {
               to="/"
               className="nav-link text-danger"
               data-bs-toggle="tooltip"
-              title="Logout"
+              title=""
               onClick={handleLogout}
             >
               <i className="nav-icon bi bi-box-arrow-right" />

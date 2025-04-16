@@ -89,15 +89,24 @@ export const MessageComponent = () => {
                     {hosts[properties[booking._id]?._id]?.email || "Loading..."}
                   </td>
                   <td className="p-3">
-                    <Link
-                      to={`/user/contact-host/${booking._id}/${
-                        hosts[properties[booking._id]?._id]?._id
-                      }`}
-                    >
-                      <button className="btn btn-outline-primary btn-sm px-4 py-2">
-                        Contact Host
+                    {hosts[properties[booking._id]?._id]?.["_id"] ? (
+                      <Link
+                        to={`/user/contact-host/${booking._id}/${
+                          hosts[properties[booking._id]?._id]["_id"]
+                        }`}
+                      >
+                        <button className="btn btn-outline-primary btn-sm px-4 py-2">
+                          Contact Host
+                        </button>
+                      </Link>
+                    ) : (
+                      <button
+                        disabled
+                        className="btn btn-secondary btn-sm px-4 py-2"
+                      >
+                        Host Not Available
                       </button>
-                    </Link>
+                    )}
                   </td>
                 </tr>
               ))
