@@ -117,7 +117,7 @@ export const UserNavbar = ({ toggleSidebar }) => {
               to="/"
               className="nav-link text-danger"
               data-bs-toggle="tooltip"
-              title="Logout"
+              title=""
               onClick={handleLogout}
             >
               <i className="nav-icon bi bi-box-arrow-right" />

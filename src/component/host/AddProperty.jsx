@@ -106,6 +106,14 @@ export const AddProperty = () => {
             <h2 className="text-xl text-primary font-weight-bold mb-4 text-center">
               Add a property
             </h2>
+            {/* Displaying the note for the host */}
+            <div className="alert alert-info mb-4" role="alert">
+              <strong>Note:</strong>
+              <p>
+                If you are registering a hotel, please enter the number of available rooms.
+                <br />If you are registering an apartment, villa, or house, please select "1" for the available rooms.
+              </p>
+            </div>
             <form onSubmit={handleSubmit(submitHandler)}>
               <div className="mb-3">
                 <label className="form-label">Title</label>
