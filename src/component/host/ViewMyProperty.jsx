@@ -87,7 +87,7 @@ export const ViewMyProperty = () => {
               <th>Address</th>
               <th>Type</th>
               <th>Amenities</th>
-              <th>Room Type</th>
+              <th>Available Rooms</th>
               <th>Total Price</th>
               <th>Ratings From Users</th>
               <th>Actions</th>
@@ -123,7 +123,7 @@ export const ViewMyProperty = () => {
                     <td>{property.propertyType}</td>
                     <td>{property.amenities?.join(", ") || "N/A"}</td>
 
-                    <td>{property.roomType}</td>
+                    <td>{property.availableRooms}</td>
 
                     <td className="text-success">
                       &#8377;{property.totalPrice}/-
