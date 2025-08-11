@@ -107,9 +107,9 @@ export const CommonNavbar = () => {
             </li> */}
 
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="#home-footer">
+              <Link className="nav-link active" aria-current="page" to="/aboutus">
                 About us
-              </a>
+              </Link>
             </li>
 
             <li className="nav-item">

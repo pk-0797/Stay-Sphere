@@ -43,6 +43,7 @@ import { PropertyDetails } from "./component/common/PropertyDetails";
 import { UserMessages } from "./component/admin/UserMessages";
 import AdminReport from "./component/host/AdminReport";
 import ReportAdmin from "./component/user/ReportAdmin";
+import { AboutUs } from "./component/common/AboutUs";
 
 // className= "app-wrapper" in UserSidebar and HostSidebar
 
@@ -57,6 +58,7 @@ function App() {
           <Routes>
             <Route path="/admin/login" element={<AdminLogin />}></Route>
             <Route path="/" element={<Home />}></Route>
+            <Route path="/aboutus" element={<AboutUs />}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/signup" element={<SignUp />}></Route>
             <Route path="/forgotpassword" element={<ForgetPass />}></Route>
