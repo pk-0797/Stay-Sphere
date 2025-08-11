@@ -112,7 +112,19 @@ export const CommonNavbar = () => {
               </a>
             </li>
 
-            <li className="nav-item dropdown">
+            <li className="nav-item">
+              <Link className="nav-link active" aria-current="page" to="/login">
+                Login
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link className="nav-link active" aria-current="page" to="/signup">
+                Sign Up
+              </Link>
+            </li>
+
+            {/* <li className="nav-item dropdown">
               <Link
                 className="nav-link dropdown-toggle"
                 to="#"
@@ -135,7 +147,7 @@ export const CommonNavbar = () => {
                   </Link>
                 </li>
               </ul>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>
