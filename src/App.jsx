@@ -48,7 +48,7 @@ import ReportAdmin from "./component/user/ReportAdmin";
 
 function App() {
   // axios.defaults.baseURL = "http://localhost:3002";
-  axios.defaults.baseURL = "https://stay-sphere-db.vercel.app";
+  axios.defaults.baseURL = "https://stay-sphere-backend-pi.vercel.app";
 
   return (
     <>
