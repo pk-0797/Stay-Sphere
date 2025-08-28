@@ -25,11 +25,19 @@ export const AdminReport = () => {
 
   const handleSend = async () => {
     if (!category) {
-      return Swal.fire("Missing Category", "Please select a category.", "warning");
+      return Swal.fire(
+        "Missing Category",
+        "Please select a category.",
+        "warning"
+      );
     }
 
     if (!message.trim()) {
-      return Swal.fire("Empty Message", "Please write your message.", "warning");
+      return Swal.fire(
+        "Empty Message",
+        "Please write your message.",
+        "warning"
+      );
     }
 
     const payload = {
@@ -56,9 +64,11 @@ export const AdminReport = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container ">
       <div className="card shadow p-4">
-        <h3 className="mb-4 text-center text-primary">Report an Issue to Admin</h3>
+        <h3 className="mb-4 text-center text-primary">
+          Report an Issue to Admin
+        </h3>
 
         <div className="mb-3">
           <label htmlFor="category" className="form-label">

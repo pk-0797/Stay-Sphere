@@ -6,15 +6,12 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 
 export const Login = () => {
-
   const navigate = useNavigate();
-  const{register,handleSubmit,formState:{errors}} = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const submitHandler = async(data) => {
+  const submitHandler = async (data) => {
     try {
       const res = await axios.post("/user/login", data);
-      console.log(res.data);
-
       if (res.status === 200) {
         Swal.fire({
           title: "Success!",
@@ -32,11 +29,11 @@ export const Login = () => {
             navigate('/user/home');
           } else if (res.data.data.role === "host") {
             navigate('/host/home');
-          }else if (res.data.data.role === "admin") {
+          } else if (res.data.data.role === "admin") {
             navigate('/admin/dashboard');
           }
         }, 1000);
-      } 
+      }
     } catch (error) {
       Swal.fire({
         title: "Error!",
@@ -46,122 +43,100 @@ export const Login = () => {
         showConfirmButton: false
       });
     }
-  }
-  
-  const validationSchema  = {
-    email : {
-      required : {
-        value:true,
-        message:"Email is Required"
-      },
-      pattern :{
-        value :/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-        message:"Invalid Email, Please Enter Valid Email ID."
+  };
+
+  const validationSchema = {
+    email: {
+      required: { value: true, message: "Email is Required" },
+      pattern: {
+        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        message: "Invalid Email, Please Enter Valid Email ID."
       }
     },
-    pass : {
-      required : {
-        value:true,
-        message:"Password is Required"
-      }
+    pass: {
+      required: { value: true, message: "Password is Required" }
     }
-  }
-  
+  };
+
   return (
     <>
-    <div>
-      <CommonNavbar></CommonNavbar>
-      <div className="d-flex vh-100 w-100">
-        <div className="container ">
+      <CommonNavbar />
+      <div className="login-wrapper d-flex align-items-center justify-content-center ">
+        <div className="container">
           <div className="row justify-content-center">
-            <div className="col-md-6 offset-md-3">
-              <h2 className="text-center text-dark m-2 ">Log in or sign up</h2>
-              <div className="text-center mb-5 text-dark">
+            {/* Responsive column (full width on mobile, 6 on tablet, 4 on desktop) */}
+            <div className="col-12 col-sm-10 col-md-8 col-lg-6">
+              <h2 className="text-center text-dark m-2">Log in or Sign up</h2>
+              <div className="text-center mb-4 text-dark">
                 Welcome to Stay Sphere{" "}
                 <span
                   style={{
                     fontFamily: "Roboto",
                     fontWeight: "700",
-                    fontSize: "1.2rem",
+                    fontSize: "1.1rem",
                   }}
                 >
                   "Cozy stays for every budget"
                 </span>
               </div>
-              <div className="card my-5" >
-                <form className="card-body cardbody-color p-lg-5" onSubmit={handleSubmit(submitHandler)}>
-                  <div
-                    className="text-center"
-                    style={{ borderRadius: "5px", marginBottom: "10px" }}
-                  >
+              <div className="card shadow-sm border-2 bg-light rounded-4">
+                <form
+                  className="card-body p-4 p-lg-5 "
+                  onSubmit={handleSubmit(submitHandler)}
+                >
+                  {/* Logo */}
+                  <div className="text-center mb-3">
                     <img
                       src="/Image/logo.png"
-                      className="img-fluid profile-image-pic img-thumbnail rounded-circle my-3"
-                      width="200px"
+                      className="img-fluid profile-image-pic img-thumbnail rounded-circle"
                       alt="profile"
                     />
                   </div>
 
+                  {/* Email */}
                   <div className="mb-3">
                     <input
                       type="text"
                       className="form-control"
-                      id="email"
-                      aria-describedby="emailHelp"
                       placeholder="Enter Your Email"
-                      {...register("email",validationSchema.email)}
+                      {...register("email", validationSchema.email)}
                     />
-                    <div style={{textAlign:"center",paddingBottom:"1px"}}>
-                    <span style={{color:"red"}}>
-                      {
-                        errors.email?.message
-                      }
-                      </span>
+                    <div className="text-center">
+                      <span className="error-text">{errors.email?.message}</span>
                     </div>
                   </div>
+
+                  {/* Password */}
                   <div className="mb-3">
                     <input
                       type="password"
                       className="form-control"
-                      id="password"
                       placeholder="Enter your Password"
-                      {...register("password",validationSchema.pass)}
+                      {...register("password", validationSchema.pass)}
                     />
-                    <div style={{textAlign:"center",paddingBottom:"1px"}}>
-                    <span style={{color:"red"}}>
-                      {
-                        errors.password?.message
-                      }
-                      </span>
+                    <div className="text-center">
+                      <span className="error-text">{errors.password?.message}</span>
                     </div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-dark fw-bold" id="log-forget">
-                      <div></div>
-                      <Link to="/forgotpassword" className="text-dark fw-bold" id="log-lh">
-                        {" "}
-                        Forgot Password ?
-                      </Link>
-                    </div>
-                    <button
-                      type="submit"
-                      className="btn btn-color px-5 mb-5 w-100 "
-                      id="log-btn"
-                    >
-                      Login
-                    </button>
+
+                  {/* Forgot + Login Button */}
+                  <div className="text-center mb-3">
+                    <Link to="/forgotpassword" className="text-dark fw-bold" id="log-lh">
+                      Forgot Password?
+                    </Link>
                   </div>
-                  <div
-                    id="emailHelp"
-                    className="form-text text-center mb-5 text-dark"
+                  <button
+                    type="submit"
+                    className="btn btn-color w-100 mb-3"
+                    id="log-btn"
                   >
+                    Login
+                  </button>
+
+                  {/* Register */}
+                  <div className="form-text text-center text-dark">
                     Not Registered?{" "}
-                    <Link
-                      to="/signup"
-                      className="text-dark fw-bold"
-                      id="log-lh"
-                    >
-                      {" "}
+                    <Link to="/signup" className="text-dark fw-bold" id="log-lh">
                       Create an Account
                     </Link>
                   </div>
@@ -171,7 +146,6 @@ export const Login = () => {
           </div>
         </div>
       </div>
-    </div>
     </>
   )
 }

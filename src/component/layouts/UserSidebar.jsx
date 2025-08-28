@@ -1,133 +1,192 @@
 import React, { useEffect, useState } from "react";
-import { UserNavbar } from "./UserNavbar";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+  FaHome,
+  FaCalendarCheck,
+  FaHeart,
+  FaListAlt,
+  FaCommentDots,
+  FaBell,
+  FaUserCircle,
+  FaFlag,
+  FaSignOutAlt,
+} from "react-icons/fa";
 
 export const UserSidebar = () => {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
+  const [wishlist, setWishlist] = useState([]);
 
-  const toggleSidebar = () => {
-    console.log("toggleSidebar");
-    setSidebarOpen(!isSidebarOpen);
-  };
-  const [wishlist, setWishlist] = useState([]); // ✅ Add wishlist state
   const userId = localStorage.getItem("id");
+  const navigate = useNavigate();
+
+  const toggleSidebar = () => setIsOpen(!isOpen);
 
   useEffect(() => {
     if (userId) {
-      axios
-        .get(`/user/wishlist/${userId}`)
-        .then((response) => setWishlist(response.data.data))
-        .catch((error) => console.error("Error fetching wishlist:", error));
+      const fetchWishlist = async () => {
+        try {
+          const res = await axios.get(`/user/wishlist/${userId}`);
+          setWishlist(res.data.data);
+        } catch (error) {
+          console.error("Error fetching wishlist:", error);
+        }
+      };
+
+      const fetchNotifications = async () => {
+        try {
+          const res = await axios.get(`/notifications/count/${userId}`);
+          setNotificationCount(res.data.count);
+        } catch (error) {
+          console.error("Error fetching notifications:", error);
+        }
+      };
+
+      fetchWishlist();
+      fetchNotifications();
+
+      const interval = setInterval(() => {
+        fetchWishlist();
+        fetchNotifications();
+      }, 30000);
+
+      return () => clearInterval(interval);
     }
-    // ✅ Fetch unread notification count
-    axios
-      .get(`/notifications/count/${userId}`)
-      .then((response) => setNotificationCount(response.data.count))
-      .catch((error) =>
-        console.error("Error fetching notification count:", error)
-      );
   }, [userId]);
 
-  const navigate = useNavigate();
-
-  const handleLogout =() => {
+  const handleLogout = () => {
     localStorage.clear();
-    navigate("/")
-  }
+    navigate("/");
+  };
 
   return (
-    <>
-      <div className="app-wrapper">
-        <UserNavbar toggleSidebar={toggleSidebar} />
-        <aside
-          className={`app-sidebar bg-body-secondary shadow ${
-            isSidebarOpen ? "open" : "d-none"
-          }`}
-          data-bs-theme="dark"
-        >
-          <div className="sidebar-brand">
-            <Link to="/user/home" className="brand-link">
-              <span className="brand-text fw-light text-uppercase">
-                Stay Sphere
-              </span>
-            </Link>
-          </div>
-
-          <div className="sidebar-menu-container">
-            <nav className="mt-2">
-              <ul className="nav sidebar-menu flex-column" role="menu">
-                <li className="nav-item">
-                  <Link to="home" className="nav-link">
-                    <i className="nav-icon bi bi-house-door" />
-                    <p>Home</p>
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link to="mybooking" className="nav-link">
-                    <i className="nav-icon bi bi-calendar-check" />
-                    <p>My Bookings</p>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="wishlist" className="nav-link">
-                    <i className="nav-icon bi bi-heart" />
-                    <p>Wishlist ({wishlist.length})</p>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="bookingreview" className="nav-link">
-                    <i class="nav-icon bi bi-card-list"></i>
-                    <p>Review your bookings</p>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="messages" className="nav-link">
-                    <i className="nav-icon bi bi-chat-dots" />
-                    <p>Connect with Host</p>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="notifications" className="nav-link">
-                    <i className="nav-icon bi bi-bell" />
-                    <p>
-                      Notifications{" "}
-                      {notificationCount > 0 && (
-                        <span className="badge bg-danger">
-                          {notificationCount}
-                        </span>
-                      )}
-                    </p>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="profile" className="nav-link">
-                    <i className="nav-icon bi bi-person-circle" />
-                    <p>Profile Settings</p>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="contact-admin" className="nav-link">
-                  <i className=" nav-icon bi bi-flag-fill"></i>
-                    <p>Report Admin</p>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="/" className="nav-link text-danger" onClick={handleLogout}>
-                    <i className="nav-icon bi bi-box-arrow-right" />
-                    <p>Logout</p>
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </aside>
-        <main class="app-main">
-          <Outlet></Outlet>
-        </main>
+    <div className="d-flex">
+      {/* Top Navbar */}
+      <div
+        className="d-flex align-items-center justify-content-between p-3 border-bottom bg-light w-100"
+        style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1030 }}
+      >
+        <button className="btn btn-outline-primary" onClick={toggleSidebar}>
+          ☰
+        </button>
+        <h5 className="mb-0">User Dashboard</h5>
       </div>
-    </>
+
+      {/* Sidebar */}
+      <aside
+        className="bg-white border-end vh-100 p-3 shadow-sm position-fixed"
+        style={{
+          top: "56px",
+          left: isOpen ? "0" : "-250px",
+          width: "250px",
+          transition: "all 0.3s ease",
+          zIndex: 1020,
+        }}
+      >
+        <nav>
+          <ul className="list-unstyled">
+            <li>
+              <Link
+                to="home"
+                className="d-flex align-items-center p-2 text-dark"
+                style={{ textDecoration: "none" }}
+              >
+                <FaHome color="#007bff" className="me-2" /> Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="mybooking"
+                className="d-flex align-items-center p-2 text-dark"
+                style={{ textDecoration: "none" }}
+              >
+                <FaCalendarCheck color="#28a745" className="me-2" /> My Bookings
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="wishlist"
+                className="d-flex align-items-center p-2 text-dark"
+                style={{ textDecoration: "none" }}
+              >
+                <FaHeart color="#dc3545" className="me-2" /> Wishlist ({wishlist.length})
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="bookingreview"
+                className="d-flex align-items-center p-2 text-dark"
+                style={{ textDecoration: "none" }}
+              >
+                <FaListAlt color="#17a2b8" className="me-2" /> Review Your Bookings
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="messages"
+                className="d-flex align-items-center p-2 text-dark"
+                style={{ textDecoration: "none" }}
+              >
+                <FaCommentDots color="#ffc107" className="me-2" /> Connect with Host
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="notifications"
+                className="d-flex align-items-center p-2 text-dark"
+                style={{ textDecoration: "none" }}
+              >
+                <FaBell color="#6f42c1" className="me-2" /> Notifications
+                {notificationCount > 0 && (
+                  <span className="badge bg-danger ms-2">
+                    {notificationCount}
+                  </span>
+                )}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="profile"
+                className="d-flex align-items-center p-2 text-dark"
+                style={{ textDecoration: "none" }}
+              >
+                <FaUserCircle color="#fd7e14" className="me-2" /> Profile Settings
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="contact-admin"
+                className="d-flex align-items-center p-2 text-dark"
+                style={{ textDecoration: "none" }}
+              >
+                <FaFlag color="#20c997" className="me-2" /> Report Admin
+              </Link>
+            </li>
+            <li>
+              <button
+                onClick={handleLogout}
+                className="btn btn-link text-danger d-flex align-items-center p-2"
+                style={{ textDecoration: "none" }}
+              >
+                <FaSignOutAlt color="#dc3545" className="me-2" /> Logout
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <main
+        className="flex-grow-1"
+        style={{
+          marginTop: "70px",
+          marginLeft: isOpen ? "250px" : "0px",
+          transition: "all 0.3s ease",
+        }}
+      >
+        <Outlet />
+      </main>
+    </div>
   );
 };

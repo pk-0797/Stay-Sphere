@@ -48,7 +48,7 @@ export const UserProfile = () => {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-start mt-4 vh-100 ">
+    <div className="container d-flex justify-content-center align-items-start mt-1 vh-100 ">
       <div className="card p-4 shadow-sm rounded-4" style={{ width: "100%" }}>
         <div className="card-body">
           <ToastContainer

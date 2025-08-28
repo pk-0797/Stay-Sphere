@@ -1,224 +1,35 @@
-// import React, { useEffect, useState } from "react";
-// import { HostNavbar } from "./HostNavbar";
-// import { Link, Outlet, useNavigate } from "react-router-dom";
-// import "bootstrap-icons/font/bootstrap-icons.css";
-// import axios from "axios";
-// import { io, Socket } from "socket.io-client";
-
-// const socket = io("http://localhost:3002");
-// export const HostSidebar = () => {
-//   const [isSidebarOpen, setSidebarOpen] = useState(false);
-
-//   const toggleSidebar = () => {
-//     console.log("toggleSidebar");
-//     setSidebarOpen(!isSidebarOpen);
-//   };
-
-//   const socket = io("http://localhost:3002");
-//   useEffect(() => {
-//     const fetchUnreadMessages = async () => {
-//       try {
-//         const res = await axios.get(`/messages/all`);
-//         const unreadCount = res.data.data.filter((msg) => !msg.isRead).length;
-//         setNewMessages(unreadCount);
-//       } catch (error) {
-//         console.error("Error fetching messages:", error);
-//       }
-//     };
-
-//     fetchUnreadMessages();
-
-//     // Real-time update using socket.io
-//     socket.on("newMessage", (newMessage) => {
-//       setNewMessages((prev) => prev + 1);
-//     });
-
-//     const interval = setInterval(fetchUnreadMessages, 5000);
-//     return () => {
-//       clearInterval(interval);
-//       socket.off("newMessage");
-//     };
-//   }, []);
-
-//   const [newRequests, setNewRequests] = useState(0);
-//   const hostId = localStorage.getItem("id");
-
-//   useEffect(() => {
-//     const fetchNewBookings = async () => {
-//       try {
-//         const res = await axios.get(`/booking/host/${hostId}`);
-//         if (res.data && res.data.data) {
-//           const pendingBookings = res.data.data.filter(
-//             (booking) => booking.status === "Pending"
-//           );
-//           setNewRequests(pendingBookings.length); // Update state with the count of pending requests
-//         }
-//       } catch (error) {
-//         console.error("Error fetching new bookings:", error);
-//       }
-//     };
-
-//     fetchNewBookings(); // Fetch once when the component mounts
-//     const interval = setInterval(fetchNewBookings, 30000); // Auto-refresh every 30 sec
-
-//     return () => clearInterval(interval); // Cleanup interval on component unmount
-//   }, [hostId]);
-
-//   const [newMessages, setNewMessages] = useState(0);
-
-//   useEffect(() => {
-//     const fetchNewMessages = async () => {
-//       try {
-//         const res = await axios.get(`/messages/host/${hostId}`);
-//         if (res.data && res.data.data) {
-//           setNewMessages(res.data.data.length); // Update state with new messages count
-//         }
-//       } catch (error) {
-//         console.error("Error fetching messages:", error);
-//       }
-//     };
-
-//     fetchNewMessages();
-
-//     // ✅ Ensure socket listens for new messages
-//     socket.on("newMessage", () => {
-//       setNewMessages((prev) => prev + 1);
-//     });
-
-//     return () => {
-//       socket.off("newMessage"); // Cleanup socket listener
-//     };
-//   }, [hostId]);
-
-//   const navigate = useNavigate();
-
-//   const handleLogout = () => {
-//     localStorage.clear();
-//     navigate("/");
-//   };
-
-//   return (
-//     <>
-//       <div className="app-wrapper">
-//         <HostNavbar toggleSidebar={toggleSidebar} />
-//         <aside
-//           className={`app-sidebar bg-body-secondary shadow ${
-//             isSidebarOpen ? "open" : "d-none"
-//           }`}
-//           data-bs-theme="dark"
-//         >
-//           <div className="sidebar-brand">
-//             <Link to="/host/home" className="brand-link">
-//               <div className="brand-text  text-uppercase">Stay Sphere</div>
-//             </Link>
-//           </div>
-
-//           <div className="sidebar-menu-container">
-//             <nav className="mt-2">
-//               <ul className="nav sidebar-menu flex-column" role="menu">
-//                 <li className="nav-item">
-//                   <Link to="home" className="nav-link">
-//                     <i className="nav-icon bi bi-house-door" />
-//                     <p>Home</p>
-//                   </Link>
-//                 </li>
-//                 <li className="nav-item">
-//                   <Link to="addproperty" className="nav-link">
-//                     <i class=" nav-icon bi bi-house-add"></i>
-//                     <p>Explore Listings</p>
-//                   </Link>
-//                 </li>
-//                 <li className="nav-item">
-//                   <Link to="myproperty" className="nav-link">
-//                     <i className="nav-icon bi bi-calendar-check" />
-//                     <p>My Property</p>
-//                   </Link>
-//                 </li>
-
-//                 <li className="nav-item">
-//                   <Link to="bookingrequest" className="nav-link">
-//                     <i className="nav-icon bi bi-repeat"></i>
-//                     <p>
-//                       Booking Request
-//                       {newRequests > 0 && (
-//                         <span className="badge bg-danger ms-2">
-//                           {newRequests}
-//                         </span>
-//                       )}
-//                     </p>
-//                   </Link>
-//                 </li>
-//                 <li className="nav-item">
-//                   <Link to="/host/messages" className="nav-link">
-//                     <i className="nav-icon bi bi-chat-dots" />
-//                     <p>
-//                       Messages
-//                       {newMessages > 0 && (
-//                         <span className="badge bg-danger ms-2">
-//                           {newMessages}
-//                         </span>
-//                       )}
-//                     </p>
-//                   </Link>
-//                 </li>
-
-//                 <li className="nav-item">
-//                   <Link to="profile" className="nav-link">
-//                     <i className="nav-icon bi bi-person-circle" />
-//                     <p>Profile Settings</p>
-//                   </Link>
-//                 </li>
-//                 <li className="nav-item">
-//                   <Link to="contact-admin" className="nav-link">
-//                     <i className=" nav-icon bi bi-flag-fill"></i>
-//                     <p>Report Admin</p>
-//                   </Link>
-//                 </li>
-//                 <li className="nav-item">
-//                   <Link
-//                     to="/"
-//                     className="nav-link text-danger"
-//                     onClick={handleLogout}
-//                   >
-//                     <i className="nav-icon bi bi-box-arrow-right" />
-//                     <p>Logout</p>
-//                   </Link>
-//                 </li>
-//               </ul>
-//             </nav>
-//           </div>
-//         </aside>
-//         <main class="app-main">
-//           <Outlet></Outlet>
-//         </main>
-//       </div>
-//     </>
-//   );
-// };
 import React, { useEffect, useState } from "react";
-import { HostNavbar } from "./HostNavbar";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import "bootstrap-icons/font/bootstrap-icons.css";
+import {
+  FaHome,
+  FaList,
+  FaBuilding,
+  FaCommentDots,
+  FaClipboardList,
+  FaUserCog,
+  FaFlag,
+  FaSignOutAlt,
+  FaPlus,
+} from "react-icons/fa";
 import axios from "axios";
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:3002");
 
 export const HostSidebar = () => {
-  // Initialize state before usage
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [newRequests, setNewRequests] = useState(0);
   const [newMessages, setNewMessages] = useState(0);
 
-  // Get hostId before usage
+  const navigate = useNavigate();
   const hostId = localStorage.getItem("id");
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
   };
 
-  const navigate = useNavigate();
-
+  // Fetch new bookings
   useEffect(() => {
     const fetchNewBookings = async () => {
       try {
@@ -227,144 +38,174 @@ export const HostSidebar = () => {
           const pendingBookings = res.data.data.filter(
             (booking) => booking.status === "Pending"
           );
-          setNewRequests(pendingBookings.length); // Update state with the count of pending requests
+          setNewRequests(pendingBookings.length);
         }
       } catch (error) {
         console.error("Error fetching new bookings:", error);
       }
     };
 
-    fetchNewBookings(); // Fetch once when the component mounts
-    const interval = setInterval(fetchNewBookings, 30000); // Auto-refresh every 30 sec
-
-    return () => clearInterval(interval); // Cleanup interval on component unmount
+    fetchNewBookings();
+    const interval = setInterval(fetchNewBookings, 30000);
+    return () => clearInterval(interval);
   }, [hostId]);
 
+  // Fetch unread messages + socket.io updates
   useEffect(() => {
     const fetchUnreadMessages = async () => {
       try {
         const res = await axios.get(`/messages/host/${hostId}`);
         const unreadCount = res.data.data.filter((msg) => !msg.isRead).length;
-        setNewMessages(unreadCount); // Update state with the count of unread messages
+        setNewMessages(unreadCount);
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
     };
 
-    fetchUnreadMessages(); // Fetch messages when the component mounts
+    fetchUnreadMessages();
 
-    // Real-time update using socket.io
     socket.on("newMessage", () => {
       setNewMessages((prev) => prev + 1);
     });
 
-    const interval = setInterval(fetchUnreadMessages, 5000); // Auto-refresh every 5 seconds
+    const interval = setInterval(fetchUnreadMessages, 5000);
     return () => {
-      clearInterval(interval); // Cleanup interval on component unmount
-      socket.off("newMessage"); // Cleanup socket listener
+      clearInterval(interval);
+      socket.off("newMessage");
     };
   }, [hostId]);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-  };
-
   return (
-    <>
-      <div className="app-wrapper">
-        <HostNavbar toggleSidebar={toggleSidebar} />
-        <aside
-          className={`app-sidebar bg-body-secondary shadow ${
-            isSidebarOpen ? "open" : "d-none"
-          }`}
-          data-bs-theme="dark"
+    <div className="d-flex">
+      {/* Top Navbar */}
+      <div
+        className="d-flex align-items-center justify-content-between p-3 border-bottom bg-light w-100"
+        style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1030 }}
+      >
+        <button
+          className="btn btn-outline-primary"
+          onClick={() => setIsOpen(!isOpen)}
         >
-          <div className="sidebar-brand">
-            <Link to="/host/home" className="brand-link">
-              <div className="brand-text text-uppercase">Stay Sphere</div>
-            </Link>
-          </div>
-
-          <div className="sidebar-menu-container">
-            <nav className="mt-2">
-              <ul className="nav sidebar-menu flex-column" role="menu">
-                <li className="nav-item">
-                  <Link to="home" className="nav-link">
-                    <i className="nav-icon bi bi-house-door" />
-                    <p>Home</p>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="addproperty" className="nav-link">
-                    <i className=" nav-icon bi bi-house-add"></i>
-                    <p>Explore Listings</p>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="myproperty" className="nav-link">
-                    <i className="nav-icon bi bi-calendar-check" />
-                    <p>My Property</p>
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link to="bookingrequest" className="nav-link">
-                    <i className="nav-icon bi bi-repeat"></i>
-                    <p>
-                      Booking Request
-                      {newRequests > 0 && (
-                        <span className="badge bg-danger ms-2">
-                          {newRequests}
-                        </span>
-                      )}
-                    </p>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="/host/messages" className="nav-link">
-                    <i className="nav-icon bi bi-chat-dots" />
-                    <p>
-                      Messages
-                      {newMessages > 0 && (
-                        <span className="badge bg-danger ms-2">
-                          {newMessages}
-                        </span>
-                      )}
-                    </p>
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link to="profile" className="nav-link">
-                    <i className="nav-icon bi bi-person-circle" />
-                    <p>Profile Settings</p>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="contact-admin" className="nav-link">
-                    <i className=" nav-icon bi bi-flag-fill"></i>
-                    <p>Report Admin</p>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link
-                    to="/"
-                    className="nav-link text-danger"
-                    onClick={handleLogout}
-                  >
-                    <i className="nav-icon bi bi-box-arrow-right" />
-                    <p>Logout</p>
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </aside>
-        <main className="app-main">
-          <Outlet />
-        </main>
+          ☰
+        </button>
+        <h5 className="mb-0">Host Dashboard</h5>
       </div>
-    </>
+
+      {/* Sidebar */}
+      <aside
+        className="bg-white border-end vh-100 p-3 shadow-sm position-fixed"
+        style={{
+          top: "56px",
+          left: isOpen ? "0" : "-250px",
+          width: "250px",
+          transition: "all 0.3s ease",
+          zIndex: 1020,
+        }}
+      >
+        <nav>
+          <ul className="list-unstyled m-0">
+            <li>
+              <Link
+                to="/host/home"
+                className="sidebar-link d-flex align-items-center p-2"
+              >
+                <FaHome className="me-2 text-primary" /> Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/host/addproperty"
+                className="sidebar-link d-flex align-items-center p-2"
+              >
+                <FaPlus className="me-2 text-warning" /> Add Property
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/host/myproperty"
+                className="sidebar-link d-flex align-items-center p-2"
+              >
+                <FaBuilding className="me-2 text-success" /> My Property
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/host/bookingrequest"
+                className="sidebar-link d-flex align-items-center p-2"
+              >
+                <FaClipboardList className="me-2 text-danger" /> Booking
+                Requests
+                {newRequests > 0 && (
+                  <span className="badge bg-danger ms-2">{newRequests}</span>
+                )}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/host/messages"
+                className="sidebar-link d-flex align-items-center p-2"
+              >
+                <FaCommentDots className="me-2 text-info" /> Messages
+                {newMessages > 0 && (
+                  <span className="badge bg-danger ms-2">{newMessages}</span>
+                )}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/host/profile"
+                className="sidebar-link d-flex align-items-center p-2"
+              >
+                <FaUserCog className="me-2 text-dark" /> Profile Settings
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/host/contact-admin"
+                className="sidebar-link d-flex align-items-center p-2"
+              >
+                <FaFlag className="me-2 text-danger" /> Report Admin
+              </Link>
+            </li>
+            <li>
+              <button
+                onClick={handleLogout}
+                className="sidebar-link btn btn-link text-danger d-flex align-items-center p-2 w-100 text-start"
+              >
+                <FaSignOutAlt className="me-2 text-secondary" /> Logout
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <main
+        className="flex-grow-1"
+        style={{
+          marginTop: "70px",
+          marginLeft: isOpen ? "250px" : "0px",
+          transition: "all 0.3s ease",
+        }}
+      >
+        <Outlet />
+      </main>
+
+      <style>
+        {`
+          .sidebar-link {
+            text-decoration: none;
+            color: #333;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+          }
+          .sidebar-link:hover {
+            background-color: #f0f2f5;
+            color: #007bff;
+            text-decoration: none;
+          }
+        `}
+      </style>
+    </div>
   );
 };

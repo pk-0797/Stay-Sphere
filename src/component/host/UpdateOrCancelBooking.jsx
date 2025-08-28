@@ -115,10 +115,13 @@ export const UpdateOrCancelBooking = () => {
   };
 
   return (
-    <div className="container mt-3">
-      <h2 className="text-center mb-3 text-primary">Guest Booking Requests</h2>
+    <div className="container ">
+      <h2 className="text-center mb-3 text-dark fw-bold">
+        Guest Booking Requests
+      </h2>
 
-      <div className="table-responsive shadow-sm p-3 mb-5 bg-white rounded">
+      {/* Desktop View (Table) */}
+      <div className="table-responsive shadow-sm p-3 mb-5 bg-white rounded d-none d-lg-block">
         <table className="table table-bordered table-hover text-center align-middle">
           <thead className="table-dark text-uppercase">
             <tr>
@@ -202,6 +205,91 @@ export const UpdateOrCancelBooking = () => {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile View (Cards) */}
+      <div className="d-block d-lg-none">
+        {bookings.map((booking, index) => (
+          <div key={booking._id} className="card mb-3 shadow-sm">
+            <div className="card-body">
+              <h5 className="card-title text-primary">
+                {properties.find((prop) => prop._id === booking.propertyId)
+                  ?.title || "N/A"}
+              </h5>
+              <p>
+                <b>Guest:</b> {booking.guestId?.fullName || "Unknown"}
+              </p>
+              <p>
+                <b>Email:</b> {booking.guestId?.email || "Unknown"}
+              </p>
+              <p>
+                <b>Phone:</b> {booking.guestId?.phoneNo || "Unknown"}
+              </p>
+              <p>
+                <b>Check-in-date:</b>{" "}
+                {new Date(booking.checkIn).toLocaleDateString()}
+              </p>
+              <p>
+                <b>Check-out-date:</b>{" "}
+                {new Date(booking.checkOut).toLocaleDateString()}
+              </p>
+
+              <p className="fw-bold">
+                <span className="text-dark">
+                  <b>Total Price:</b>
+                </span>{" "}
+                <span className="text-success">
+                  ₹{booking.totalPrice || "N/A"}/-
+                </span>
+              </p>
+              <span
+                className={`badge mb-2 ${
+                  booking.status === "Pending"
+                    ? "bg-warning text-dark"
+                    : booking.status === "Confirmed"
+                    ? "bg-success text-white"
+                    : "bg-danger text-white"
+                }`}
+              >
+                Status : {booking.status}
+              </span>
+
+              <div className="d-flex flex-wrap gap-2 mt-2">
+                {booking.status === "Pending" && (
+                  <>
+                    <button
+                      className="btn btn-success btn-sm"
+                      onClick={() => handleConfirm(booking._id)}
+                    >
+                      Confirm
+                    </button>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleCancel(booking._id)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="btn btn-warning btn-sm"
+                      onClick={() => openEditModal(booking)}
+                    >
+                      Edit
+                    </button>
+                  </>
+                )}
+
+                {booking.status === "Confirmed" && (
+                  <button
+                    className="btn btn-warning btn-sm"
+                    onClick={() => openEditModal(booking)}
+                  >
+                    Edit
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Edit Modal */}

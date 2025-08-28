@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+
+
 export const UserHome = () => {
   const navigate = useNavigate();
   const [properties, setProperties] = useState([]);
@@ -13,7 +15,7 @@ export const UserHome = () => {
     city: "",
   });
 
-  // Filter properties based on the search query (title, state, city)
+  // Filter properties based on search query
   const filteredProperties = properties.filter((property) => {
     return (
       (property.title || "")
@@ -42,20 +44,17 @@ export const UserHome = () => {
       }
     };
 
-    fetchProperties();
-
     const fetchWishlist = async () => {
       try {
         const res = await axios.get(`/user/wishlist/${userId}`);
-        setWishlist(res.data.data); // ✅ Load wishlist from the database
+        setWishlist(res.data.data);
       } catch (error) {
         console.error("Error fetching wishlist:", error);
       }
     };
 
-    if (userId) {
-      fetchWishlist();
-    }
+    fetchProperties();
+    if (userId) fetchWishlist();
   }, [userId, navigate]);
 
   const handleBookNow = (propertyId) => {
@@ -78,26 +77,26 @@ export const UserHome = () => {
         });
         updatedWishlist = res.data.data;
       }
-      setWishlist(updatedWishlist); // ✅ Update with latest data from DB
+      setWishlist(updatedWishlist);
     } catch (error) {
       console.error("Error updating wishlist:", error);
     }
   };
 
   return (
-    <div>
+    <>
       <div id="home-margin">
-        <h6 id="phrase" style={{ fontSize: "2rem" }}>
-          "Cozy stays for every budget"
-        </h6>
+        <marquee behavior="" direction="ltr">
+          <h1 id="phrase">"Cozy stays for every budget"</h1>
+        </marquee>
 
         {/* Search Filters */}
         <div className="container mt-4 mb-4">
-          <div className="d-flex flex-wrap gap-5 justify-content-between">
+          <div className="d-flex flex-wrap gap-3 justify-content-between">
             <input
               type="text"
-              className="form-control"
-              style={{ maxWidth: "250px" }}
+              className="form-control search-input"
+              style={{ maxWidth: "350px" }}
               placeholder="Search by Title"
               value={searchQuery.title}
               onChange={(e) =>
@@ -106,8 +105,8 @@ export const UserHome = () => {
             />
             <input
               type="text"
-              className="form-control"
-              style={{ maxWidth: "250px" }}
+              className="form-control search-input"
+              style={{ maxWidth: "350px" }}
               placeholder="Search by State"
               value={searchQuery.state}
               onChange={(e) =>
@@ -116,8 +115,8 @@ export const UserHome = () => {
             />
             <input
               type="text"
-              className="form-control"
-              style={{ maxWidth: "250px" }}
+              className="form-control search-input"
+              style={{ maxWidth: "350px" }}
               placeholder="Search by City"
               value={searchQuery.city}
               onChange={(e) =>
@@ -127,6 +126,7 @@ export const UserHome = () => {
           </div>
         </div>
 
+        {/* Property Cards */}
         <div className="home-card-container">
           {filteredProperties.length > 0 ? (
             filteredProperties.map((property) => (
@@ -156,7 +156,7 @@ export const UserHome = () => {
                 </p>
 
                 <button
-                  className="btn btn-color px-5 mb-3 w-100"
+                  className="btn btn-color px-5 mb-2 w-100"
                   id="log-btn"
                   onClick={() => handleBookNow(property._id)}
                 >
@@ -178,112 +178,7 @@ export const UserHome = () => {
           )}
         </div>
       </div>
-
-      <div id="home-footer">
-        <div class="footer-up">
-          <div class="footer-detail-name">
-            <ul>
-              <p>Company</p>
-              <li class="footer-a">
-                <a href="">Abouts</a>
-              </li>
-              <li class="footer-a">
-                <a href="">Company details</a>
-              </li>
-              <li class="footer-a">
-                <a href="">For the Record</a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="footer-detail-name">
-            <ul>
-              <p>Communities</p>
-              <li class="footer-a">
-                <a href="">Careers</a>
-              </li>
-              <li class="footer-a">
-                <a href="">Advertising</a>
-              </li>
-              <li class="footer-a">
-                <a href="">Investors</a>
-              </li>
-              <li class="footer-a">
-                <a href=""></a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="footer-detail-name">
-            <ul>
-              <p>Useful links</p>
-              <li class="footer-a">
-                <a href="">Support</a>
-              </li>
-              <li class="footer-a">
-                <a href="">Contact Customer Service</a>
-              </li>
-              <li class="footer-a">
-                <a href="">FAQs</a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="footer-detail-name">
-            <ul>
-              <p>Partners</p>
-              <li class="footer-a">
-                <a href="">List your property</a>
-              </li>
-              <li class="footer-a">
-                <a href="">Partner help</a>
-              </li>
-              <li class="footer-a">
-                <a href="">Become an affiliate</a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="f-icon">
-            <p>
-              <img src="/Image/Instagram-Color.png" alt="..." />
-              <img src="/Image/Facebook-Color.png" alt="..." />
-              <img src="/Image/Twitter-Color.png" alt="..." />
-              <img src="/Image/whatsapp-Color.png" alt="..." />
-            </p>
-          </div>
-        </div>
-
-        <div class="footer-line">
-          <div class="line"></div>
-        </div>
-
-        <div class="footer-bottom">
-          <p class="a-left">
-            <span>
-              <a href="">Leagal</a>
-            </span>
-            <span>
-              <a href="">Safety & Privacy Center</a>
-            </span>
-            <span>
-              <a href="">Privacy Policy</a>
-            </span>
-            <span>
-              <a href="">Cookies</a>
-            </span>
-            <span>
-              <a href="">About Ads</a>
-            </span>
-            <span>
-              <a href="">Acessibility</a>
-            </span>
-          </p>
-          <p class="c-right">
-            <span>&copy; 2025 Stay Sphere, Inc.</span>
-          </p>
-        </div>
-      </div>
-    </div>
+      
+    </>
   );
 };
