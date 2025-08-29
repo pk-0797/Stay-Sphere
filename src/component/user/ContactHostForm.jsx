@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2"; // ✅ import SweetAlert2
 import { FaEnvelope, FaUser, FaPaperPlane } from "react-icons/fa";
 
 export const ContactHostForm = () => {
@@ -11,7 +12,6 @@ export const ContactHostForm = () => {
     email: "",
     message: "",
   });
-  const [status, setStatus] = useState(null);
   const [selectedIssues, setSelectedIssues] = useState([]);
 
   const issueOptions = [
@@ -43,6 +43,7 @@ export const ContactHostForm = () => {
           "Error fetching host details:",
           err.response?.data || err.message
         );
+        Swal.fire("Error", "Failed to load host details!", "error");
       }
     };
     fetchHostDetails();
@@ -72,14 +73,23 @@ export const ContactHostForm = () => {
           selectedIssues.join(", ") +
           (formData.message ? ` | Additional: ${formData.message}` : ""),
       });
-      setStatus({ type: "success", message: response.data.message });
+
+      // ✅ SweetAlert2 success popup
+      Swal.fire({
+        icon: "success",
+        title: "Message Sent!",
+        text: response.data.message,
+        showConfirmButton: true,
+      });
+
       setFormData({ name: "", email: "", message: "" });
       setSelectedIssues([]);
     } catch (err) {
-      setStatus({
-        type: "error",
-        message:
-          err.response?.data?.message || "Failed to send message. Try again!",
+      // ✅ SweetAlert2 error popup
+      Swal.fire({
+        icon: "error",
+        title: "Failed!",
+        text: err.response?.data?.message || "Failed to send message. Try again!",
       });
     }
   };
@@ -100,17 +110,6 @@ export const ContactHostForm = () => {
 
       {/* Contact Form */}
       <div className="card shadow-sm border-0 rounded-3 p-4 mt-3">
-        {status && (
-          <div
-            className={`alert alert-${
-              status.type === "success" ? "success" : "danger"
-            }`}
-            role="alert"
-          >
-            {status.message}
-          </div>
-        )}
-
         <form onSubmit={handleSubmit}>
           {/* Name */}
           <div className="mb-3">
