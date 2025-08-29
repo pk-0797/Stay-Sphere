@@ -120,7 +120,7 @@ export const SignUp = () => {
         <div className="form-bg">
           <div className="container">
             <div className="row">
-              <div className="col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8">
+              <div className="col-md-offset-3 col-md-6 col-sm-offset-2 col-sm-8 mt-5">
                 <div className="form-container sign-form">
                   <h3 className="title">Registration</h3>
                   <form

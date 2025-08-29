@@ -95,7 +95,7 @@ body {
 .form-container {
   font-family: 'Titillium Web', sans-serif;
   padding: 25px 30px;
-  box-shadow: 0 0 8px #555;
+  border: 1px solid #555;
   margin: 4rem auto;
   border-radius: 10px;
   max-width: 700px;
@@ -274,7 +274,7 @@ body {
 
   .form-horizontal .btn {
     font-size: 15px;
-    padding: 8px 0;
+    padding: 8px 5px;
   }
 
   .form-container .social-links a {
@@ -300,6 +300,7 @@ body {
 
   .form-horizontal .btn {
     font-size: 14px;
+    padding: 5px;
   }
 }
 

@@ -34,7 +34,7 @@ export const PropertyDetails = () => {
   return (
     <>
       <CommonNavbar></CommonNavbar>
-      <div className="prop-layout">
+      <div className="prop-layout mt-5">
         {/* Left Column: Image */}
         <div className="prop-image">
           <img src={property.propertyURL || "/default.jpg"} alt="Property" />

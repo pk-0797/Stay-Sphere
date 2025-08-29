@@ -115,7 +115,7 @@ export const Review = () => {
                   <div className="card-body">
                     <h5 className="card-title">
                       {properties[booking._id]?.title || "Loading..."}
-                    </h5>
+                    </h5><br />
                     <p className="mb-1">
                       <strong>Address:</strong>{" "}
                       {properties[booking._id]?.address || (

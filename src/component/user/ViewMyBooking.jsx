@@ -124,7 +124,7 @@ export const ViewMyBooking = () => {
               <div className="card-body">
                 <h5 className="card-title text-primary">
                   {properties[booking._id]?.title || "Loading..."}
-                </h5>
+                </h5><br />
                 <p className="card-text mb-1">
                   <strong>Address:</strong>{" "}
                   {properties[booking._id]?.address || "Loading..."}

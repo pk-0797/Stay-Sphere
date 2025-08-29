@@ -21,7 +21,7 @@ export const HostHome = () => {
   return (
     <div className="container-fluid d-flex justify-content-center align-items-center py-5 px-3">
       <div className="col-lg-8 col-md-10 col-sm-12">
-        <div className="card shadow-lg border-0 rounded-4 p-4 p-md-5 text-center">
+        <div className="card shadow-sm border-1 rounded-4 p-4 p-md-5 text-center">
           <div className="card-body">
             <h1 className="display-5 fw-bold text-primary mb-3">
               Welcome,

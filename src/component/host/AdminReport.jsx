@@ -65,7 +65,7 @@ export const AdminReport = () => {
 
   return (
     <div className="container ">
-      <div className="card shadow p-4">
+      <div className="card p-4">
         <h3 className="mb-4 text-center text-primary">
           Report an Issue to Admin
         </h3>

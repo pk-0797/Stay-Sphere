@@ -128,7 +128,7 @@ export const MessageComponent = () => {
               <div key={index} className="col-12 mb-3">
                 <div className="card shadow-sm border-1">
                   <div className="card-body">
-                    <h5 className="card-title">{property?.title || "Loading..."}</h5>
+                    <h5 className="card-title">{property?.title || "Loading..."}</h5><br />
                     <p className="mb-1">
                       <strong>Booking ID:</strong> {booking._id}
                     </p>
