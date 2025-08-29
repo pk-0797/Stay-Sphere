@@ -21,7 +21,7 @@ body {
 }
 
 /* log in css */
-/* .login-wrapper {
+.login-wrapper {
   min-height: 100vh;
   background: #f8f9fa;
   padding: 20px;
@@ -268,7 +268,7 @@ body {
 /* Mobile (<=576px) */
 @media (max-width: 576px) {
   .form-container {
-    margin-top: 1rem;
+    margin-top: 1.2rem;
     padding: 15px;
   }
 
@@ -292,6 +292,7 @@ body {
 @media (max-width: 400px) {
   .form-container {
     padding: 10px;
+    margin-top: 50px;
   }
 
   .form-horizontal .form-control {
