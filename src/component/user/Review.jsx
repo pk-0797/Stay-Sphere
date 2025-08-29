@@ -7,21 +7,20 @@ export const Review = () => {
   const [properties, setProperties] = useState({});
   const userId = localStorage.getItem("id");
 
+  // ✅ Fetch all bookings
   const getAllMyBookings = async () => {
     try {
       const res = await axios.get(`/booking/getbookingsbyuserid/${userId}`);
-
       const sortedBookings = [...res.data.data].sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt) // Newest first
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
-
-      console.log("Sorted Bookings:", sortedBookings); // Debugging log
       setBookings(sortedBookings);
     } catch (err) {
       console.error("Error fetching bookings:", err);
     }
   };
 
+  // ✅ Fetch property details by bookingId
   const getPropertyByBookingId = async (bookingId) => {
     try {
       const res = await axios.get(`/booking/getpropertyby/${bookingId}`);
@@ -44,10 +43,12 @@ export const Review = () => {
   }, [bookings]);
 
   return (
-    <div className="container mt-3">
-      <div className="table-responsive shadow-sm p-4 mb-5 bg-white rounded">
+    <div className="container">
+      <h3 className="text-dark mb-4 fw-bold text-center">All Bookings</h3>
+      {/* ✅ Desktop: Table View */}
+      <div className="table-responsive shadow-sm p-4 mb-5 bg-white rounded d-none d-md-block">
         <table className="table table-bordered table-hover text-center">
-          <thead className="bg-dark  table-info text-white ">
+          <thead className="bg-dark table-info text-white">
             <tr>
               <th className="p-3">No.</th>
               <th className="p-3">Property Title</th>
@@ -72,7 +73,7 @@ export const Review = () => {
                     )}
                   </td>
                   <td className="p-3 font-weight-bold text-success">
-                    &#8377;{booking.totalPrice || "N/A"}/-
+                    ₹{booking.totalPrice || "N/A"}/-
                   </td>
                   <td className="p-3">
                     {booking.status === "Confirmed" ? (
@@ -102,6 +103,59 @@ export const Review = () => {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* ✅ Mobile: Card View */}
+      <div className="d-md-none">
+        <div className="row">
+          {bookings.length > 0 ? (
+            bookings.map((booking, index) => (
+              <div key={index} className="col-12 mb-3">
+                <div className="card shadow-sm border-1">
+                  <div className="card-body">
+                    <h5 className="card-title">
+                      {properties[booking._id]?.title || "Loading..."}
+                    </h5>
+                    <p className="mb-1">
+                      <strong>Address:</strong>{" "}
+                      {properties[booking._id]?.address || (
+                        <span className="text-muted">Loading...</span>
+                      )}
+                    </p>
+                    <p className="mb-1 text-success fw-bold">
+                      <strong>Price:</strong> ₹{booking.totalPrice || "N/A"}/-
+                    </p>
+                    <div className="mt-2">
+                      {booking.status === "Confirmed" ? (
+                        <Link
+                          to={`/user/bookingreview/reviewform/${
+                            properties[booking._id]?._id
+                          }/${booking._id}`}
+                        >
+                          <button className="btn btn-outline-primary w-100">
+                            Review
+                          </button>
+                        </Link>
+                      ) : booking.status === "Cancelled" ? (
+                        <span className="text-danger">Booking Cancelled</span>
+                      ) : (
+                        <span className="text-warning">
+                          Pending Confirmation
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="col-12">
+              <div className="alert alert-info text-center">
+                No bookings found
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

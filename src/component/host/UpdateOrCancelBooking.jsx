@@ -215,7 +215,7 @@ export const UpdateOrCancelBooking = () => {
               <h5 className="card-title text-primary">
                 {properties.find((prop) => prop._id === booking.propertyId)
                   ?.title || "N/A"}
-              </h5>
+              </h5><br />
               <p>
                 <b>Guest:</b> {booking.guestId?.fullName || "Unknown"}
               </p>

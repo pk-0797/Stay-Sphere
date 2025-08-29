@@ -29,6 +29,13 @@ export const HostSidebar = () => {
     navigate("/");
   };
 
+  // ✅ helper function to close sidebar only on mobile
+  const handleMobileLinkClick = () => {
+    if (window.innerWidth < 768) {
+      setIsOpen(false);
+    }
+  };
+
   // Fetch new bookings
   useEffect(() => {
     const fetchNewBookings = async () => {
@@ -88,7 +95,9 @@ export const HostSidebar = () => {
         >
           ☰
         </button>
-        <h5 className="mb-0">Host Dashboard</h5>
+        <Link to="/host/home">
+          <img src="/Image/logo.png" alt="" height={"40px"} width={"50px"} />
+        </Link>
       </div>
 
       {/* Sidebar */}
@@ -107,6 +116,7 @@ export const HostSidebar = () => {
             <li>
               <Link
                 to="/host/home"
+                onClick={handleMobileLinkClick}
                 className="sidebar-link d-flex align-items-center p-2"
               >
                 <FaHome className="me-2 text-primary" /> Home
@@ -115,6 +125,7 @@ export const HostSidebar = () => {
             <li>
               <Link
                 to="/host/addproperty"
+                onClick={handleMobileLinkClick}
                 className="sidebar-link d-flex align-items-center p-2"
               >
                 <FaPlus className="me-2 text-warning" /> Add Property
@@ -123,6 +134,7 @@ export const HostSidebar = () => {
             <li>
               <Link
                 to="/host/myproperty"
+                onClick={handleMobileLinkClick}
                 className="sidebar-link d-flex align-items-center p-2"
               >
                 <FaBuilding className="me-2 text-success" /> My Property
@@ -131,6 +143,7 @@ export const HostSidebar = () => {
             <li>
               <Link
                 to="/host/bookingrequest"
+                onClick={handleMobileLinkClick}
                 className="sidebar-link d-flex align-items-center p-2"
               >
                 <FaClipboardList className="me-2 text-danger" /> Booking
@@ -143,6 +156,7 @@ export const HostSidebar = () => {
             <li>
               <Link
                 to="/host/messages"
+                onClick={handleMobileLinkClick}
                 className="sidebar-link d-flex align-items-center p-2"
               >
                 <FaCommentDots className="me-2 text-info" /> Messages
@@ -154,6 +168,7 @@ export const HostSidebar = () => {
             <li>
               <Link
                 to="/host/profile"
+                onClick={handleMobileLinkClick}
                 className="sidebar-link d-flex align-items-center p-2"
               >
                 <FaUserCog className="me-2 text-dark" /> Profile Settings
@@ -162,6 +177,7 @@ export const HostSidebar = () => {
             <li>
               <Link
                 to="/host/contact-admin"
+                onClick={handleMobileLinkClick}
                 className="sidebar-link d-flex align-items-center p-2"
               >
                 <FaFlag className="me-2 text-danger" /> Report Admin
@@ -169,7 +185,10 @@ export const HostSidebar = () => {
             </li>
             <li>
               <button
-                onClick={handleLogout}
+                onClick={() => {
+                  handleLogout();
+                  handleMobileLinkClick();
+                }}
                 className="sidebar-link btn btn-link text-danger d-flex align-items-center p-2 w-100 text-start"
               >
                 <FaSignOutAlt className="me-2 text-secondary" /> Logout

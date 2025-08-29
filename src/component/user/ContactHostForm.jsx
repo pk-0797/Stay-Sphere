@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { FaEnvelope, FaUser, FaPaperPlane } from "react-icons/fa";
 
 export const ContactHostForm = () => {
   const { bookingId, hostId } = useParams();
@@ -84,17 +85,21 @@ export const ContactHostForm = () => {
   };
 
   return (
-    <div className="container mt-4">
-      <h3 className="text-center text-primary">Contact Host</h3>
+    <div className="container mb-4">
+      {/* Page Header */}
+      <h3 className="text-center text-primary fw-bold mb-3 d-flex align-items-center justify-content-center gap-2">
+        <FaEnvelope /> Connect with Host
+      </h3>
 
       {hostDetails && (
-        <div className="alert alert-dark text-center">
+        <div className="alert alert-dark text-center shadow-sm">
           Contacting Host: <strong>{hostDetails.fullName}</strong> (
           <i>{hostDetails.email}</i>)
         </div>
       )}
 
-      <div className="card shadow p-4 mt-3">
+      {/* Contact Form */}
+      <div className="card shadow-sm border-0 rounded-3 p-4 mt-3">
         {status && (
           <div
             className={`alert alert-${
@@ -107,11 +112,15 @@ export const ContactHostForm = () => {
         )}
 
         <form onSubmit={handleSubmit}>
+          {/* Name */}
           <div className="mb-3">
-            <label className="form-label">Your Name</label>
+            <label className="form-label fw-semibold">
+              <FaUser className="me-2 text-primary" />
+              Your Name
+            </label>
             <input
               type="text"
-              className="form-control"
+              className="form-control shadow-sm"
               name="name"
               value={formData.name}
               onChange={handleChange}
@@ -119,11 +128,15 @@ export const ContactHostForm = () => {
             />
           </div>
 
+          {/* Email */}
           <div className="mb-3">
-            <label className="form-label">Your Email</label>
+            <label className="form-label fw-semibold">
+              <FaEnvelope className="me-2 text-primary" />
+              Your Email
+            </label>
             <input
               type="email"
-              className="form-control"
+              className="form-control shadow-sm"
               name="email"
               value={formData.email}
               onChange={handleChange}
@@ -131,18 +144,20 @@ export const ContactHostForm = () => {
             />
           </div>
 
+          {/* Issues Selection */}
           <div className="mb-3">
-            <label className="form-label">Select Your Issues</label>
+            <label className="form-label fw-semibold">Select Your Issues</label>
             <div className="d-flex flex-wrap gap-2">
               {issueOptions.map((issue, index) => (
                 <button
                   key={index}
                   type="button"
-                  className={`btn ${
+                  className={`btn rounded-pill shadow-sm ${
                     selectedIssues.includes(issue)
                       ? "btn-primary"
                       : "btn-outline-primary"
                   }`}
+                  style={{ fontSize: "0.85rem" }}
                   onClick={() => toggleIssueSelection(issue)}
                 >
                   {issue}
@@ -151,11 +166,12 @@ export const ContactHostForm = () => {
             </div>
           </div>
 
+          {/* Custom Message */}
           {selectedIssues.includes("Other") && (
             <div className="mb-3">
-              <label className="form-label">Custom Message</label>
+              <label className="form-label fw-semibold">Custom Message</label>
               <textarea
-                className="form-control"
+                className="form-control shadow-sm"
                 name="message"
                 rows="4"
                 value={formData.message}
@@ -165,17 +181,18 @@ export const ContactHostForm = () => {
             </div>
           )}
 
-          <div className="alert alert-info text-sm mb-3" role="alert">
-            <strong>Note:</strong> After submitting your response, please check
-            your email for the latest updates and host responses.
+          {/* Info Note */}
+          <div className="alert alert-info small mb-3 shadow-sm" role="alert">
+            <strong>Note:</strong> After submitting, please check your email for
+            host responses and updates.
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
-            className="btn btn-color px-5 mb-5 w-100 "
-            id="log-btn"
+            className="btn btn-primary px-5 py-2 w-100 d-flex align-items-center justify-content-center gap-2 shadow-sm"
           >
-            Send Message
+            <FaPaperPlane /> Send Message
           </button>
         </form>
       </div>

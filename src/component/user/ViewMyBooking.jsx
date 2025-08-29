@@ -14,7 +14,6 @@ export const ViewMyBooking = () => {
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt) // Newest first
       );
 
-      console.log("Sorted Bookings:", sortedBookings); // Debugging log
       setBookings(sortedBookings);
     } catch (err) {
       console.error("Error fetching bookings:", err);
@@ -43,13 +42,13 @@ export const ViewMyBooking = () => {
   }, [bookings]);
 
   return (
-    <div className="container mt-3">
-      <h2 className="text-center mb-3 text-primary font-weight-bold">
-        My Bookings
-      </h2>
-      <div className="table-responsive shadow-sm p-4 mb-5 bg-white rounded">
+    <div className="container">
+      <h2 className="text-center mb-3 text-dark fw-bold">My Bookings</h2>
+
+      {/* ✅ Desktop: Table */}
+      <div className="table-responsive shadow-sm p-4 mb-5 bg-white rounded d-none d-md-block">
         <table className="table table-bordered table-hover text-center">
-          <thead className="bg-dark table-info text-white ">
+          <thead className="bg-dark table-info text-white">
             <tr>
               <th className="p-3">No.</th>
               <th className="p-3">Property Title</th>
@@ -80,13 +79,13 @@ export const ViewMyBooking = () => {
                       timeZone: "Asia/Kolkata",
                     })}
                   </td>
-                  <td>
+                  <td className="p-3">
                     {new Date(booking.createdAt).toLocaleTimeString("en-GB", {
                       timeZone: "Asia/Kolkata",
                     })}
                   </td>
-                  <td className="p-3 font-weight-bold text-success">
-                    &#8377;{booking.totalPrice || "N/A"}/-
+                  <td className="p-3 fw-bold text-success">
+                    ₹{booking.totalPrice || "N/A"}/-
                   </td>
                   <td className="p-3">
                     <span
@@ -94,8 +93,8 @@ export const ViewMyBooking = () => {
                         booking.status === "Pending"
                           ? "bg-warning text-dark"
                           : booking.status === "Confirmed"
-                          ? "bg-success text-white"
-                          : "bg-danger text-white"
+                          ? "bg-success"
+                          : "bg-danger"
                       }`}
                     >
                       {booking.status}
@@ -112,6 +111,60 @@ export const ViewMyBooking = () => {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* ✅ Mobile: Cards */}
+      <div className="d-md-none">
+        {bookings.length > 0 ? (
+          bookings.map((booking, index) => (
+            <div
+              key={index}
+              className="card shadow-sm mb-3 border-1 rounded-3"
+            >
+              <div className="card-body">
+                <h5 className="card-title text-primary">
+                  {properties[booking._id]?.title || "Loading..."}
+                </h5>
+                <p className="card-text mb-1">
+                  <strong>Address:</strong>{" "}
+                  {properties[booking._id]?.address || "Loading..."}
+                </p>
+                <p className="card-text mb-1">
+                  <strong>Type:</strong>{" "}
+                  {properties[booking._id]?.propertyType || "Loading..."}
+                </p>
+                <p className="card-text mb-1">
+                  <strong>Date:</strong>{" "}
+                  {new Date(booking.createdAt).toLocaleDateString("en-GB", {
+                    timeZone: "Asia/Kolkata",
+                  })}
+                </p>
+                <p className="card-text mb-1">
+                  <strong>Time:</strong>{" "}
+                  {new Date(booking.createdAt).toLocaleTimeString("en-GB", {
+                    timeZone: "Asia/Kolkata",
+                  })}
+                </p>
+                <p className="card-text mb-1 text-success fw-bold">
+                  <strong className="text-dark">Price:</strong> ₹{booking.totalPrice || "N/A"}/-
+                </p>
+                <span
+                  className={`badge ${
+                    booking.status === "Pending"
+                      ? "bg-warning text-dark"
+                      : booking.status === "Confirmed"
+                      ? "bg-success"
+                      : "bg-danger"
+                  }`}
+                >
+                  {booking.status}
+                </span>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-center text-muted p-4">No bookings found</div>
+        )}
       </div>
     </div>
   );

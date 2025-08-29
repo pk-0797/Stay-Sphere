@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { FaTrash, FaBell, FaSyncAlt } from "react-icons/fa";
 
 const socket = io("http://localhost:3002");
 
@@ -115,32 +116,38 @@ export const Notification = () => {
   };
 
   return (
-    <div className="container mt-4 p-4 bg-light rounded ">
+    <div className="container mt-4">
+      {/* Header */}
       <div className="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-        <h4 className="fw-bold text-primary">🔔 Notifications</h4>
+        <h4 className="fw-bold text-primary d-flex align-items-center gap-2">
+          <FaBell /> Notifications
+        </h4>
         <button
-          className="btn btn-outline-primary"
+          className="btn btn-outline-primary d-flex align-items-center gap-2"
           onClick={fetchNotifications}
         >
-          Refresh 🔄
+          <FaSyncAlt /> Refresh
         </button>
       </div>
 
+      {/* Notifications */}
       {notifications.length > 0 ? (
         <>
+          {/* Bulk Action */}
           <div className="mb-3 d-flex justify-content-end">
             <button
-              className="btn btn-danger"
+              className="btn btn-danger d-flex align-items-center gap-2"
               onClick={deleteMultipleNotifications}
               disabled={selectedNotifications.length === 0}
             >
-              Delete Selected ({selectedNotifications.length})
+              <FaTrash /> Delete Selected ({selectedNotifications.length})
             </button>
           </div>
 
-          <div className="table-responsive rounded shadow-sm p-3 ">
-            <table className="table table-hover text-center align-middle">
-              <thead className="table-primary text-uppercase">
+          {/* Desktop / Tablet Table */}
+          <div className="d-none d-md-block table-responsive rounded shadow-sm">
+            <table className="table table-hover align-middle">
+              <thead className="table-primary text-uppercase text-center">
                 <tr>
                   <th>
                     <input
@@ -157,7 +164,7 @@ export const Notification = () => {
                     />
                   </th>
                   <th>#</th>
-                  <th>Message</th>
+                  <th className="text-start">Message</th>
                   <th>Date & Time</th>
                   <th>Status</th>
                   <th>Action</th>
@@ -167,7 +174,7 @@ export const Notification = () => {
                 {notifications.map((notif, index) => (
                   <tr
                     key={notif._id}
-                    className={`border ${notif.isRead ? "" : "table-warning"}`}
+                    className={`${notif.isRead ? "" : "table-warning"} text-center`}
                     onClick={() => markAsRead(notif._id)}
                     style={{ cursor: "pointer" }}
                   >
@@ -190,7 +197,7 @@ export const Notification = () => {
                     </td>
                     <td>
                       <span
-                        className={`badge ${
+                        className={`badge px-3 py-2 ${
                           notif.isRead ? "bg-success" : "bg-danger"
                         }`}
                       >
@@ -199,13 +206,13 @@ export const Notification = () => {
                     </td>
                     <td>
                       <button
-                        className="btn btn-sm btn-danger"
+                        className="btn btn-sm btn-outline-danger d-flex align-items-center gap-1"
                         onClick={(e) => {
                           e.stopPropagation();
                           deleteNotification(notif._id);
                         }}
                       >
-                        Delete
+                        <FaTrash /> Delete
                       </button>
                     </td>
                   </tr>
@@ -213,10 +220,63 @@ export const Notification = () => {
               </tbody>
             </table>
           </div>
+
+          {/* Mobile Card View */}
+          <div className="d-block d-md-none">
+            {notifications.map((notif, index) => (
+              <div
+                key={notif._id}
+                className={`card shadow-sm mb-3 ${
+                  notif.isRead ? "" : "border-warning"
+                }`}
+                onClick={() => markAsRead(notif._id)}
+                style={{ cursor: "pointer" }}
+              >
+                <div className="card-body">
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <h6 className="fw-bold mb-0 text-secondary">#{index + 1}</h6>
+                    <span
+                      className={`badge ${
+                        notif.isRead ? "bg-success" : "bg-danger"
+                      }`}
+                    >
+                      {notif.isRead ? "Read" : "Unread"}
+                    </span>
+                  </div>
+                  <p className="mb-2 text-dark">{notif.message}</p>
+                  <small className="text-muted">
+                    {new Date(notif.createdAt).toLocaleString()}
+                  </small>
+                  <div className="d-flex justify-content-between align-items-center mt-3">
+                    <div>
+                      <input
+                        type="checkbox"
+                        checked={selectedNotifications.includes(notif._id)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          toggleSelectNotification(notif._id);
+                        }}
+                      />{" "}
+                      Select
+                    </div>
+                    <button
+                      className="btn btn-sm btn-outline-danger d-flex align-items-center gap-1"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteNotification(notif._id);
+                      }}
+                    >
+                      <FaTrash /> Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </>
       ) : (
-        <div className="alert alert-info text-center mt-3 p-3 shadow-sm rounded fw-semibold">
-          No new notifications
+        <div className="alert alert-info text-center mt-3 p-4 shadow-sm rounded fw-semibold">
+          🎉 No new notifications
         </div>
       )}
     </div>
@@ -224,4 +284,3 @@ export const Notification = () => {
 };
 
 export default Notification;
-

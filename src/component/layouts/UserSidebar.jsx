@@ -23,6 +23,13 @@ export const UserSidebar = () => {
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
+  // ✅ closes sidebar on mobile after clicking a link
+  const handleLinkClick = () => {
+    if (window.innerWidth <= 768) {
+      setIsOpen(false);
+    }
+  };
+
   useEffect(() => {
     if (userId) {
       const fetchWishlist = async () => {
@@ -58,6 +65,7 @@ export const UserSidebar = () => {
   const handleLogout = () => {
     localStorage.clear();
     navigate("/");
+    handleLinkClick(); // ✅ also close sidebar on logout
   };
 
   return (
@@ -70,7 +78,9 @@ export const UserSidebar = () => {
         <button className="btn btn-outline-primary" onClick={toggleSidebar}>
           ☰
         </button>
-        <h5 className="mb-0">User Dashboard</h5>
+        <Link to="/user/home">
+          <img src="/Image/logo.png" alt="" height={"40px"} width={"50px"} />
+        </Link>
       </div>
 
       {/* Sidebar */}
@@ -89,6 +99,7 @@ export const UserSidebar = () => {
             <li>
               <Link
                 to="home"
+                onClick={handleLinkClick}
                 className="d-flex align-items-center p-2 text-dark"
                 style={{ textDecoration: "none" }}
               >
@@ -98,6 +109,7 @@ export const UserSidebar = () => {
             <li>
               <Link
                 to="mybooking"
+                onClick={handleLinkClick}
                 className="d-flex align-items-center p-2 text-dark"
                 style={{ textDecoration: "none" }}
               >
@@ -107,33 +119,40 @@ export const UserSidebar = () => {
             <li>
               <Link
                 to="wishlist"
+                onClick={handleLinkClick}
                 className="d-flex align-items-center p-2 text-dark"
                 style={{ textDecoration: "none" }}
               >
-                <FaHeart color="#dc3545" className="me-2" /> Wishlist ({wishlist.length})
+                <FaHeart color="#dc3545" className="me-2" /> Wishlist (
+                {wishlist.length})
               </Link>
             </li>
             <li>
               <Link
                 to="bookingreview"
+                onClick={handleLinkClick}
                 className="d-flex align-items-center p-2 text-dark"
                 style={{ textDecoration: "none" }}
               >
-                <FaListAlt color="#17a2b8" className="me-2" /> Review Your Bookings
+                <FaListAlt color="#17a2b8" className="me-2" /> Review Your
+                Bookings
               </Link>
             </li>
             <li>
               <Link
                 to="messages"
+                onClick={handleLinkClick}
                 className="d-flex align-items-center p-2 text-dark"
                 style={{ textDecoration: "none" }}
               >
-                <FaCommentDots color="#ffc107" className="me-2" /> Connect with Host
+                <FaCommentDots color="#ffc107" className="me-2" /> Connect with
+                Host
               </Link>
             </li>
             <li>
               <Link
                 to="notifications"
+                onClick={handleLinkClick}
                 className="d-flex align-items-center p-2 text-dark"
                 style={{ textDecoration: "none" }}
               >
@@ -148,15 +167,18 @@ export const UserSidebar = () => {
             <li>
               <Link
                 to="profile"
+                onClick={handleLinkClick}
                 className="d-flex align-items-center p-2 text-dark"
                 style={{ textDecoration: "none" }}
               >
-                <FaUserCircle color="#fd7e14" className="me-2" /> Profile Settings
+                <FaUserCircle color="#fd7e14" className="me-2" /> Profile
+                Settings
               </Link>
             </li>
             <li>
               <Link
                 to="contact-admin"
+                onClick={handleLinkClick}
                 className="d-flex align-items-center p-2 text-dark"
                 style={{ textDecoration: "none" }}
               >
