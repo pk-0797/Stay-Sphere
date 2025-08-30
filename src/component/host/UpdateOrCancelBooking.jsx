@@ -121,17 +121,15 @@ export const UpdateOrCancelBooking = () => {
       </h2>
 
       {/* Desktop View (Table) */}
-      <div className="table-responsive shadow-sm p-3 mb-5 bg-white rounded d-none d-lg-block">
-        <table className="table table-bordered table-hover text-center align-middle">
+      <div className="shadow-sm p-3 mb-5 bg-white rounded d-none d-lg-block">
+        <table className="table table-bordered table-hover text-center align-middle w-100">
           <thead className="table-dark text-uppercase">
             <tr>
               <th>#</th>
-              <th>Guest Name</th>
-              <th>Email Id</th>
-              <th>Phone No</th>
+              <th>Guest Details</th> {/* ✅ merged guest details */}
               <th>Property Title</th>
-              <th>Check-in</th>
-              <th>Check-out</th>
+              <th>Booking Id</th>
+              <th>Stay Dates</th> {/* ✅ merged checkin + checkout */}
               <th>Total Price</th>
               <th>Status</th>
               <th>Actions</th>
@@ -141,18 +139,32 @@ export const UpdateOrCancelBooking = () => {
             {bookings.map((booking, index) => (
               <tr key={booking._id} className="table-light">
                 <td className="fw-bold">{index + 1}</td>
-                <td>{booking.guestId?.fullName || "Unknown"}</td>
-                <td>{booking.guestId?.email || "Unknown"}</td>
-                <td>{booking.guestId?.phoneNo || "Unknown"}</td>
+
+                {/* ✅ merged guest details */}
+                <td className="text-start">
+                  <div>
+                    <strong>{booking.guestId?.fullName || "Unknown"}</strong>
+                  </div>
+                  <div>{booking.guestId?.email || "Unknown"}</div>
+                  <div>{booking.guestId?.phoneNo || "Unknown"}</div>
+                </td>
+
                 <td>
                   {properties.find((prop) => prop._id === booking.propertyId)
                     ?.title || "N/A"}
                 </td>
-                <td>{new Date(booking.checkIn).toLocaleDateString()}</td>
-                <td>{new Date(booking.checkOut).toLocaleDateString()}</td>
-                <td className="p-3 font-weight-bold text-success">
+                <td>{booking._id}</td>
+
+                {/* ✅ merged stay dates */}
+                <td>
+                  {new Date(booking.checkIn).toLocaleDateString()} -{" "}
+                  {new Date(booking.checkOut).toLocaleDateString()}
+                </td>
+
+                <td className="p-3 fw-bold text-success">
                   ₹{booking.totalPrice || "N/A"}/-
                 </td>
+
                 <td>
                   <span
                     className={`badge ${
@@ -166,8 +178,9 @@ export const UpdateOrCancelBooking = () => {
                     {booking.status}
                   </span>
                 </td>
+
                 <td>
-                  <div className="d-flex justify-content-center gap-2">
+                  <div className="d-flex justify-content-center gap-2 flex-wrap">
                     {booking.status === "Pending" && (
                       <>
                         <button
@@ -215,7 +228,11 @@ export const UpdateOrCancelBooking = () => {
               <h5 className="card-title text-primary">
                 {properties.find((prop) => prop._id === booking.propertyId)
                   ?.title || "N/A"}
-              </h5><br />
+              </h5>
+              <br />
+              <p>
+                <b>Booking Id:</b> {booking._id}
+              </p>
               <p>
                 <b>Guest:</b> {booking.guestId?.fullName || "Unknown"}
               </p>
