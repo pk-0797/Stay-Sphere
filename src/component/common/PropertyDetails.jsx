@@ -64,6 +64,10 @@ export const PropertyDetails = () => {
                 ₹{property.totalPrice || "N/A"}/-
               </span>
             </li>
+            <li>
+              <strong>Ratings:</strong> {averageRating} ⭐ (
+              {propertyRatings.length} reviews)
+            </li>
           </ul>
 
           <button
