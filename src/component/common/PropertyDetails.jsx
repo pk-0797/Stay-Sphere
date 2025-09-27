@@ -22,6 +22,8 @@ export const PropertyDetails = () => {
         console.error("Error fetching property:", error);
       })
       .finally(() => setLoading(false));
+
+    fetchRatings();
   }, [id]);
 
   // Fetch All Ratings
@@ -33,6 +35,19 @@ export const PropertyDetails = () => {
       console.error("Error fetching ratings:", error);
     }
   };
+
+  // Calculate Average Rating
+  const propertyRatings = rating.filter(
+    (r) => String(r.propertyId?._id) === String(property._id)
+  );
+
+  const averageRating =
+    propertyRatings.length > 0
+      ? (
+          propertyRatings.reduce((sum, r) => sum + r.rating, 0) /
+          propertyRatings.length
+        ).toFixed(1)
+      : "No Rating";
 
   if (loading) {
     return <p>Loading property details...</p>;
