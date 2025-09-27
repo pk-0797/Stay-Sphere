@@ -8,6 +8,7 @@ export const PropertyDetails = () => {
   const navigate = useNavigate();
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [rating, setRating] = useState([]);
 
   useEffect(() => {
     console.log("Fetching property details for ID:", id);
@@ -22,6 +23,16 @@ export const PropertyDetails = () => {
       })
       .finally(() => setLoading(false));
   }, [id]);
+
+  // Fetch All Ratings
+  const fetchRatings = async () => {
+    try {
+      const res = await axios.get("/review/getallreviews");
+      setRating(res.data.data);
+    } catch (error) {
+      console.error("Error fetching ratings:", error);
+    }
+  };
 
   if (loading) {
     return <p>Loading property details...</p>;
